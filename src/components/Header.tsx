@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Menu, ShoppingCart, User, Search } from "lucide-react";
@@ -13,12 +14,12 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* 로고 */}
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 gradient-primary rounded-full flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">농</span>
             </div>
             <h1 className="text-xl font-bold text-foreground">팜마켓</h1>
-          </div>
+          </Link>
 
           {/* 검색바 - 데스크톱 */}
           <div className="hidden md:flex items-center space-x-2 flex-1 max-w-md mx-8">
@@ -33,11 +34,11 @@ const Header = () => {
 
           {/* 네비게이션 - 데스크톱 */}
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="#" className="text-foreground hover:text-primary smooth-transition">홈</a>
-            <a href="#" className="text-foreground hover:text-primary smooth-transition">채소</a>
-            <a href="#" className="text-foreground hover:text-primary smooth-transition">과일</a>
-            <a href="#" className="text-foreground hover:text-primary smooth-transition">곡물</a>
-            <a href="#" className="text-foreground hover:text-primary smooth-transition">특산품</a>
+            <Link to="/" className="text-foreground hover:text-primary smooth-transition">홈</Link>
+            <Link to="/category/vegetables" className="text-foreground hover:text-primary smooth-transition">채소</Link>
+            <Link to="/category/fruits" className="text-foreground hover:text-primary smooth-transition">과일</Link>
+            <Link to="/category/grains" className="text-foreground hover:text-primary smooth-transition">곡물</Link>
+            <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition">특산품</Link>
           </nav>
 
           {/* 액션 버튼들 */}
@@ -92,11 +93,11 @@ const Header = () => {
               
               {/* 모바일 네비게이션 */}
               <nav className="flex flex-col space-y-2">
-                <a href="#" className="text-foreground hover:text-primary smooth-transition py-2">홈</a>
-                <a href="#" className="text-foreground hover:text-primary smooth-transition py-2">채소</a>
-                <a href="#" className="text-foreground hover:text-primary smooth-transition py-2">과일</a>
-                <a href="#" className="text-foreground hover:text-primary smooth-transition py-2">곡물</a>
-                <a href="#" className="text-foreground hover:text-primary smooth-transition py-2">특산품</a>
+                <Link to="/" className="text-foreground hover:text-primary smooth-transition py-2">홈</Link>
+                <Link to="/category/vegetables" className="text-foreground hover:text-primary smooth-transition py-2">채소</Link>
+                <Link to="/category/fruits" className="text-foreground hover:text-primary smooth-transition py-2">과일</Link>
+                <Link to="/category/grains" className="text-foreground hover:text-primary smooth-transition py-2">곡물</Link>
+                <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition py-2">특산품</Link>
               </nav>
             </div>
           </div>

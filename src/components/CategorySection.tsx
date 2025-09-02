@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 import tomatoesImage from "@/assets/tomatoes.jpg";
 import leafyGreensImage from "@/assets/leafy-greens.jpg";
 import fruitsImage from "@/assets/seasonal-fruits.jpg";
@@ -73,8 +74,8 @@ const CategorySection = () => {
         {/* 카테고리 그리드 */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
           {categories.map((category) => (
-            <Card 
-              key={category.id}
+            <Link to={`/category/${category.id}`} key={category.id}>
+              <Card 
               className="group cursor-pointer smooth-transition hover:shadow-lg border-border bg-card"
             >
               <CardContent className="p-0">
@@ -105,6 +106,7 @@ const CategorySection = () => {
                 </div>
               </CardContent>
             </Card>
+            </Link>
           ))}
         </div>
 
