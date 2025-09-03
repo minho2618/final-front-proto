@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AdminLayout } from "@/components/admin-layout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import CategoryPage from "./pages/CategoryPage";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Members from "./pages/dashboard/Members";
@@ -38,8 +37,6 @@ const App = () => (
         <Routes>
           {/* User */}
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Register />} />
-          <Route path="/register" element={<Register />} />
           {/* Shopping Mall */}
           <Route path="/" element={<Index />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
