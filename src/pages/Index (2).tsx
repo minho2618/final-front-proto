@@ -1,5 +1,5 @@
 import { Navigation } from "@/components/Navigation";
-import { ProductCard } from "@/components/ProductCard";
+import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,50 +14,46 @@ import carrotsImage from "@/assets/carrots.jpg";
 const Index = () => {
   const featuredProducts = [
     {
-      id: 1,
+      id: "1",
       name: "경북 안동 유기농 토마토 1kg",
       image: tomatoesImage,
       price: 8500,
       originalPrice: 10000,
       rating: 4.8,
-      reviews: 234,
-      farmer: "김농부",
-      location: "경북 안동",
+      reviewCount: 234,
+      farm: "김농부",
       isOrganic: true,
       discount: 15
     },
     {
-      id: 2,
+      id: "2",
       name: "제주도 신선 유기농 상추 300g",
       image: lettuceImage,
       price: 4500,
       rating: 4.9,
-      reviews: 187,
-      farmer: "이농장",
-      location: "제주도",
+      reviewCount: 187,
+      farm: "이농장",
       isOrganic: true
     },
     {
-      id: 3,
+      id: "3",
       name: "충주 햇 사과 2kg (10-12개)",
       image: applesImage,
       price: 15000,
       originalPrice: 18000,
       rating: 4.7,
-      reviews: 456,
-      farmer: "박과수원",
-      location: "충북 충주",
+      reviewCount: 456,
+      farm: "박과수원",
       discount: 17
     },
     {
-      id: 4,
+      id: "4",
       name: "강원도 정선 당근 1kg",
       image: carrotsImage,
       price: 3500,
       rating: 4.6,
-      reviews: 123,
-      farmer: "최농가",
-      location: "강원도 정선"
+      reviewCount: 123,
+      farm: "최농가"
     }
   ];
 

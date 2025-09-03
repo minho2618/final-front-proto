@@ -7,6 +7,7 @@ import { AdminLayout } from "@/components/admin-layout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import CategoryPage from "./pages/CategoryPage";
+import ProductDetail from "./pages/ProductDetail";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Members from "./pages/dashboard/Members";
 import Products from "./pages/dashboard/Products";
@@ -40,6 +41,7 @@ const App = () => (
           {/* Shopping Mall */}
           <Route path="/" element={<Index />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           {/* DashBoard */}
           <Route path="dashboard/dashboard" element={<AdminLayout><Monitoring /></AdminLayout>} />
           <Route path="dashboard/monitoring" element={<AdminLayout><Monitoring /></AdminLayout>} />
