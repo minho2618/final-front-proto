@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { AdminLayout } from "@/components/admin-layout";
+import { SellerLayout } from "@/components/SellerLayout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import CategoryPage from "./pages/CategoryPage";
@@ -75,16 +76,16 @@ const App = () => (
           <Route path="dashboard/analytics" element={<AdminLayout><Analytics /></AdminLayout>} />
           <Route path="dashboard/performance" element={<AdminLayout><Performance /></AdminLayout>} />
           {/* Seller */}
-          <Route path="seller/dashboard" element={<AdminLayout><SellerDashboard /></AdminLayout>} />
-          <Route path="seller/analytics" element={<AdminLayout><Analytics /></AdminLayout>} />
-          <Route path="seller/analytics/products" element={<AdminLayout><AnalyticsProducts /></AdminLayout>} />
-          <Route path="seller/analytics/sales" element={<AdminLayout><AnalyticsSales /></AdminLayout>} />
-          <Route path="seller/analytics/settlement" element={<AdminLayout><AnalyticsSettlement /></AdminLayout>} />
-          <Route path="seller/order/delivery" element={<AdminLayout><OrderDelivery /></AdminLayout>} />
-          <Route path="seller/order/notifications" element={<AdminLayout><OrderNotifications /></AdminLayout>} />
-          <Route path="seller/product/inventory" element={<AdminLayout><ProductInventory /></AdminLayout>} />
-          <Route path="seller/product/pricing" element={<AdminLayout><ProductPricing /></AdminLayout>} />
-          <Route path="seller/product/register" element={<AdminLayout><ProductRegister /></AdminLayout>} />
+          <Route path="seller/dashboard" element={<SellerLayout><SellerDashboard /></SellerLayout>} />
+          <Route path="seller/analytics" element={<SellerLayout><Analytics /></SellerLayout>} />
+          <Route path="seller/analytics/products" element={<SellerLayout><AnalyticsProducts /></SellerLayout>} />
+          <Route path="seller/analytics/sales" element={<SellerLayout><AnalyticsSales /></SellerLayout>} />
+          <Route path="seller/analytics/settlement" element={<SellerLayout><AnalyticsSettlement /></SellerLayout>} />
+          <Route path="seller/order/delivery" element={<SellerLayout><OrderDelivery /></SellerLayout>} />
+          <Route path="seller/order/notifications" element={<SellerLayout><OrderNotifications /></SellerLayout>} />
+          <Route path="seller/product/inventory" element={<SellerLayout><ProductInventory /></SellerLayout>} />
+          <Route path="seller/product/pricing" element={<SellerLayout><ProductPricing /></SellerLayout>} />
+          <Route path="seller/product/register" element={<SellerLayout><ProductRegister /></SellerLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
