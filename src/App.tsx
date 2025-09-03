@@ -28,7 +28,16 @@ import Announcements from "./pages/dashboard/Announcements";
 import Analytics from "./pages/dashboard/Analytics";
 import Performance from "./pages/dashboard/Performance";
 import RecipePage from "./pages/RecipePage";
-// import Revenue from "./pages/dashboard/Revenue";
+// Seller
+import SellerDashboard from "./pages/seller/Dashboard";
+import AnalyticsProducts from "./pages/seller/AnalyticsProducts";
+import AnalyticsSales from "./pages/seller/AnalyticsSales";
+import AnalyticsSettlement from "./pages/seller/AnalyticsSettlement";
+import OrderDelivery from "./pages/seller/OrderDelivery";
+import OrderNotifications from "./pages/seller/OrderNotifications";
+import ProductInventory from "./pages/seller/ProductInventory";
+import ProductPricing from "./pages/seller/ProductPricing";
+import ProductRegister from "./pages/seller/ProductRegister";
 
 const queryClient = new QueryClient();
 
@@ -65,8 +74,17 @@ const App = () => (
           <Route path="dashboard/announcements" element={<AdminLayout><Announcements /></AdminLayout>} />
           <Route path="dashboard/analytics" element={<AdminLayout><Analytics /></AdminLayout>} />
           <Route path="dashboard/performance" element={<AdminLayout><Performance /></AdminLayout>} />
-          {/* <Route path="/dashboard/revenue" element={<Revenue />} /> */}
-      
+          {/* Seller */}
+          <Route path="seller/dashboard" element={<AdminLayout><SellerDashboard /></AdminLayout>} />
+          <Route path="seller/analytics" element={<AdminLayout><Analytics /></AdminLayout>} />
+          <Route path="seller/analytics/products" element={<AdminLayout><AnalyticsProducts /></AdminLayout>} />
+          <Route path="seller/analytics/sales" element={<AdminLayout><AnalyticsSales /></AdminLayout>} />
+          <Route path="seller/analytics/settlement" element={<AdminLayout><AnalyticsSettlement /></AdminLayout>} />
+          <Route path="seller/order/delivery" element={<AdminLayout><OrderDelivery /></AdminLayout>} />
+          <Route path="seller/order/notifications" element={<AdminLayout><OrderNotifications /></AdminLayout>} />
+          <Route path="seller/product/inventory" element={<AdminLayout><ProductInventory /></AdminLayout>} />
+          <Route path="seller/product/pricing" element={<AdminLayout><ProductPricing /></AdminLayout>} />
+          <Route path="seller/product/register" element={<AdminLayout><ProductRegister /></AdminLayout>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
