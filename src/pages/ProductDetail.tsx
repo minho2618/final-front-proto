@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +19,7 @@ import {
   Truck,
   Shield
 } from "lucide-react";
+import Header from "@/components/Header";
 
 import tomatoesImage from "@/assets/tomatoes.jpg";
 
@@ -94,7 +94,7 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <Header />
       
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}

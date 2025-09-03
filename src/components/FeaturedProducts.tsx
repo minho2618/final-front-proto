@@ -94,7 +94,7 @@ const featuredProducts = [
 const FeaturedProducts = () => {
   return (
     <section className="py-16">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-8">
         {/* 섹션 헤더 */}
         <div className="flex items-center justify-between mb-12">
           <div>

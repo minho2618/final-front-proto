@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,6 +17,7 @@ import {
   MapPin,
   Building
 } from "lucide-react";
+import Header from "@/components/Header";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -53,7 +53,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <Header />
       
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-md mx-auto">

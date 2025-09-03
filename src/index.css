@@ -1,6 +1,19 @@
+@font-face {
+    font-family: 'Juache';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+    font-weight: normal;
+    font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .container {
+        max-width: 1000px;
+    }
+}
 
 /* 농작물 쇼핑몰 디자인 시스템 - 자연스럽고 신선한 느낌 */
 
@@ -112,7 +125,8 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: 'Juache', sans-serif;
   }
 
   /* 농작물 쇼핑몰 전용 그라디언트 */

@@ -136,7 +136,7 @@ const CategoryPage = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="container mx-auto px-4 py-16 text-center">
+        <div className="container mx-auto px-8 py-16 text-center">
           <h1 className="text-2xl font-bold text-foreground">카테고리를 찾을 수 없습니다</h1>
           <Link to="/" className="text-primary hover:underline mt-4 inline-block">
             홈으로 돌아가기
@@ -151,7 +151,7 @@ const CategoryPage = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-8 py-8">
         {/* 브레드크럼과 제목 */}
         <div className="mb-8">
           <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">

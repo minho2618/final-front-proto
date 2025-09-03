@@ -11,14 +11,14 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-8 py-4">
         <div className="flex items-center justify-between">
           {/* 로고 */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 gradient-primary rounded-full flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">농</span>
+              <span className="text-primary-foreground font-bold text-sm">팜</span>
             </div>
-            <h1 className="text-xl font-bold text-foreground">팜마켓</h1>
+            <h1 className="text-xl font-bold text-foreground">팜투테이블</h1>
           </Link>
 
           {/* 검색바 - 데스크톱 */}

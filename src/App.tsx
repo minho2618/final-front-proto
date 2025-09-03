@@ -27,6 +27,7 @@ import FAQ from "./pages/dashboard/FAQ";
 import Announcements from "./pages/dashboard/Announcements";
 import Analytics from "./pages/dashboard/Analytics";
 import Performance from "./pages/dashboard/Performance";
+import RecipePage from "./pages/RecipePage";
 // import Revenue from "./pages/dashboard/Revenue";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/recipe" element={<RecipePage />} />
           {/* DashBoard */}
           <Route path="dashboard/dashboard" element={<AdminLayout><Monitoring /></AdminLayout>} />
           <Route path="dashboard/monitoring" element={<AdminLayout><Monitoring /></AdminLayout>} />

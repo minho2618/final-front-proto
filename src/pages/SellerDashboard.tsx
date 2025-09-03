@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,6 +18,7 @@ import {
   BarChart3,
   Settings
 } from "lucide-react";
+import Header from "@/components/Header";
 
 const SellerDashboard = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -99,7 +99,7 @@ const SellerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <Header />
       
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">

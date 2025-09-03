@@ -170,7 +170,7 @@ export function AdminSidebar() {
                       <SidebarMenuItem key={item.url}>
                         <SidebarMenuButton asChild>
                           <NavLink 
-                            to={item.url} 
+                            to={"/dashboard" + item.url} 
                             className={cn(
                               "flex items-center space-x-3 px-3 py-2 rounded-md transition-colors text-sm",
                               isActive(item.url) 

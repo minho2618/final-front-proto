@@ -18,7 +18,7 @@ const HeroSection = () => {
       {/* 그라디언트 오버레이 */}
       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 z-10"></div>
 
-      <div className="container mx-auto px-4 py-20 relative z-20">
+      <div className="container mx-auto px-8 py-20 relative z-20">
         <div className="max-w-2xl">
           {/* 메인 헤딩 */}
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
@@ -35,24 +35,6 @@ const HeroSection = () => {
             합리적인 가격에 만나보세요. 
             당일 수확한 신선함을 그대로 전달합니다.
           </p>
-
-          {/* 액션 버튼들 */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary-hover text-primary-foreground smooth-transition"
-            >
-              지금 쇼핑하기
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="border-white text-white hover:bg-white hover:text-primary smooth-transition"
-            >
-              농장 소개보기
-            </Button>
-          </div>
 
           {/* 특징 아이콘들 */}
           <div className="flex flex-wrap gap-6">

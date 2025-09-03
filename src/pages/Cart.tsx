@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,10 +15,12 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import Header from "@/components/Header";
 
 import tomatoesImage from "@/assets/tomatoes.jpg";
 import lettuceImage from "@/assets/lettuce.jpg";
 import applesImage from "@/assets/apples.jpg";
+import { Head } from "react-day-picker";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([
@@ -80,8 +81,8 @@ const Cart = () => {
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
-        <div className="container mx-auto px-4 py-16">
+        <Header />
+        <div className="container mx-auto px-8 py-16">
           <div className="text-center space-y-6">
             <div className="w-24 h-24 bg-secondary rounded-full flex items-center justify-center mx-auto">
               <ShoppingCart className="w-12 h-12 text-muted-foreground" />
@@ -103,9 +104,9 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-8 py-8">
         {/* Header */}
         <div className="flex items-center space-x-4 mb-8">
           <Link to="/">
