@@ -4,10 +4,12 @@ import { ShoppingCart, User, Search, Menu, X, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useCart } from "@/contexts/CartContext";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { state } = useCart();
   
   const isActive = (path: string) => location.pathname === path;
   
@@ -67,9 +69,11 @@ export const Navigation = () => {
             <Link to="/cart" className="relative">
               <Button variant="ghost" size="sm" className="p-2">
                 <ShoppingCart className="w-5 h-5" />
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-accent">
-                  3
-                </Badge>
+                {state.itemCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs bg-accent flex items-center justify-center">
+                    {state.itemCount}
+                  </Badge>
+                )}
               </Button>
             </Link>
             

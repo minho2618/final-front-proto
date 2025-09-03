@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Heart, Star } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   id: string;
@@ -33,9 +35,27 @@ const ProductCard = ({
   const [isLiked, setIsLiked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+  const { addItem } = useCart();
+  const { toast } = useToast();
 
   const handleProductClick = () => {
     navigate(`/product/${id}`);
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem({
+      id,
+      name,
+      price,
+      originalPrice,
+      image,
+      farm
+    });
+    toast({
+      title: "장바구니에 추가되었습니다",
+      description: `${name}이(가) 장바구니에 담겼습니다.`,
+    });
   };
 
   return (
@@ -92,10 +112,7 @@ const ProductCard = ({
             <Button 
               size="icon"
               className="w-8 h-8 rounded-full bg-primary hover:bg-primary-hover text-primary-foreground shadow-lg"
-              onClick={(e) => {
-                e.stopPropagation();
-                // 장바구니 추가 로직
-              }}
+              onClick={handleAddToCart}
             >
               <ShoppingCart className="w-4 h-4" />
             </Button>
@@ -150,10 +167,7 @@ const ProductCard = ({
             <Button 
               size="sm"
               className="hidden md:flex smooth-transition bg-primary hover:bg-primary-hover text-primary-foreground"
-              onClick={(e) => {
-                e.stopPropagation();
-                // 장바구니 추가 로직
-              }}
+              onClick={handleAddToCart}
             >
               담기
             </Button>

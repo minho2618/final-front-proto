@@ -3,11 +3,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CartProvider } from "@/contexts/CartContext";
 import { AdminLayout } from "@/components/admin-layout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import CategoryPage from "./pages/CategoryPage";
 import ProductDetail from "./pages/ProductDetail";
+import Cart from "./pages/Cart";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Members from "./pages/dashboard/Members";
 import Products from "./pages/dashboard/Products";
@@ -31,10 +33,11 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+    <CartProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
         <Routes>
           {/* User */}
           <Route path="/login" element={<Login />} />
@@ -42,6 +45,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
           {/* DashBoard */}
           <Route path="dashboard/dashboard" element={<AdminLayout><Monitoring /></AdminLayout>} />
           <Route path="dashboard/monitoring" element={<AdminLayout><Monitoring /></AdminLayout>} />
@@ -66,6 +70,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
+    </CartProvider>
   </QueryClientProvider>
 );
 

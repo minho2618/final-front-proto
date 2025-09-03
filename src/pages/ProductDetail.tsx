@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -25,10 +27,12 @@ const ProductDetail = () => {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const { addItem } = useCart();
+  const { toast } = useToast();
 
   // Mock product data
   const product = {
-    id: 1,
+    id: id || "1",
     name: "경북 안동 유기농 토마토 1kg",
     images: [tomatoesImage, tomatoesImage, tomatoesImage],
     price: 8500,
@@ -50,6 +54,23 @@ const ProductDetail = () => {
     origin: "국산 (경북 안동)",
     weight: "1kg (약 8~10개)",
     harvest: "2024년 3월 수확"
+  };
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        originalPrice: product.originalPrice,
+        image: product.images[0],
+        farm: product.farmer.farm
+      });
+    }
+    toast({
+      title: "장바구니에 추가되었습니다",
+      description: `${product.name} ${quantity}개가 장바구니에 담겼습니다.`,
+    });
   };
 
   const reviews = [
@@ -215,7 +236,10 @@ const ProductDetail = () => {
               </div>
 
               <div className="flex space-x-3">
-                <Button className="flex-1 bg-gradient-fresh hover:shadow-fresh h-12">
+                <Button 
+                  className="flex-1 bg-gradient-fresh hover:shadow-fresh h-12"
+                  onClick={handleAddToCart}
+                >
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   장바구니 담기
                 </Button>
