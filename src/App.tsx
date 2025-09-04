@@ -28,6 +28,7 @@ import FAQ from "./pages/dashboard/FAQ";
 import Announcements from "./pages/dashboard/Announcements";
 import Analytics from "./pages/dashboard/Analytics";
 import Performance from "./pages/dashboard/Performance";
+import SystemManagement from "./pages/dashboard/SystemManagement";
 import RecipePage from "./pages/RecipePage";
 // Seller
 import SellerDashboard from "./pages/seller/Dashboard";
@@ -73,8 +74,9 @@ const App = () => (
           <Route path="dashboard/support" element={<AdminLayout><Support /></AdminLayout>} />
           <Route path="dashboard/faq" element={<AdminLayout><FAQ /></AdminLayout>} />
           <Route path="dashboard/announcements" element={<AdminLayout><Announcements /></AdminLayout>} />
-          <Route path="dashboard/analytics" element={<AdminLayout><Analytics /></AdminLayout>} />
-          <Route path="dashboard/performance" element={<AdminLayout><Performance /></AdminLayout>} />
+           <Route path="dashboard/analytics" element={<AdminLayout><Analytics /></AdminLayout>} />
+           <Route path="dashboard/performance" element={<AdminLayout><Performance /></AdminLayout>} />
+           <Route path="dashboard/system" element={<AdminLayout><SystemManagement /></AdminLayout>} />
           {/* Seller */}
           <Route path="seller/dashboard" element={<SellerLayout><SellerDashboard /></SellerLayout>} />
           <Route path="seller/analytics" element={<SellerLayout><Analytics /></SellerLayout>} />

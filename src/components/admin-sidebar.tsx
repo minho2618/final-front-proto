@@ -91,9 +91,9 @@ const menuGroups = [
   {
     title: "시스템 관리",
     items: [
+      { title: "시스템 설정", url: "/system", icon: Settings },
       { title: "사이트 콘텐츠", url: "/content", icon: Globe },
       { title: "결제 시스템", url: "/payment", icon: CreditCard },
-      { title: "시스템 설정", url: "/system", icon: Settings },
     ]
   },
 ]
