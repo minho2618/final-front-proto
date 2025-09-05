@@ -31,6 +31,7 @@ import Performance from "./pages/dashboard/Performance";
 import SystemManagement from "./pages/dashboard/SystemManagement";
 import RecipePage from "./pages/RecipePage";
 import Profile from "./pages/Profile";
+import AuctionPage from "./pages/AuctionPage";
 // Seller
 import SellerDashboard from "./pages/seller/Dashboard";
 import AnalyticsProducts from "./pages/seller/AnalyticsProducts";
@@ -62,6 +63,7 @@ const App = () => (
           <Route path="/cart" element={<Cart />} />
           <Route path="/recipe" element={<RecipePage />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/auction" element={<AuctionPage />} />
           {/* DashBoard */}
           <Route path="dashboard/dashboard" element={<AdminLayout><Monitoring /></AdminLayout>} />
           <Route path="dashboard/monitoring" element={<AdminLayout><Monitoring /></AdminLayout>} />
