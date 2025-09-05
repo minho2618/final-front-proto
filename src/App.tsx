@@ -30,6 +30,7 @@ import Analytics from "./pages/dashboard/Analytics";
 import Performance from "./pages/dashboard/Performance";
 import SystemManagement from "./pages/dashboard/SystemManagement";
 import RecipePage from "./pages/RecipePage";
+import Profile from "./pages/Profile";
 // Seller
 import SellerDashboard from "./pages/seller/Dashboard";
 import AnalyticsProducts from "./pages/seller/AnalyticsProducts";
@@ -59,6 +60,7 @@ const App = () => (
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/recipe" element={<RecipePage />} />
+          <Route path="/profile" element={<Profile />} />
           {/* DashBoard */}
           <Route path="dashboard/dashboard" element={<AdminLayout><Monitoring /></AdminLayout>} />
           <Route path="dashboard/monitoring" element={<AdminLayout><Monitoring /></AdminLayout>} />

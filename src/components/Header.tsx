@@ -49,9 +49,11 @@ const Header = () => {
             </Button>
 
             {/* 사용자 버튼 */}
-            <Button variant="ghost" size="icon" className="smooth-transition hover:bg-muted">
-              <User className="w-5 h-5" />
-            </Button>
+            <Link to="/profile">
+              <Button variant="ghost" size="icon" className="smooth-transition hover:bg-muted">
+                <User className="w-5 h-5" />
+              </Button>
+            </Link>
 
             {/* 장바구니 버튼 */}
             <Button variant="ghost" size="icon" className="relative smooth-transition hover:bg-muted">
