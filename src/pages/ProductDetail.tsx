@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
@@ -20,51 +20,69 @@ import {
   Shield
 } from "lucide-react";
 import Header from "@/components/Header";
+import { getProductById } from "@/lib/api";
 
-import tomatoesImage from "@/assets/tomatoes.jpg";
+import tomatoesImage from "@/assets/tomatoes.jpg"; // Placeholder
+
+// Based on ProductRes
+interface Product {
+  productId: number;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  discountValue: number;
+  isActive: boolean;
+  seller: {
+    sellerName: string;
+  };
+  // Add other potential fields for robustness
+  images?: { url: string }[];
+  rating?: number;
+  reviewCount?: number;
+}
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const { addItem } = useCart();
   const { toast } = useToast();
 
-  // Mock product data
-  const product = {
-    id: id || "1",
-    name: "경북 안동 유기농 토마토 1kg",
-    images: [tomatoesImage, tomatoesImage, tomatoesImage],
-    price: 8500,
-    originalPrice: 10000,
-    discount: 15,
-    rating: 4.8,
-    reviewCount: 234,
-    farmer: {
-      name: "김농부",
-      farm: "안동 햇살농장",
-      location: "경북 안동시",
-      experience: "15년차",
-      rating: 4.9
-    },
-    description: "경북 안동의 청정한 자연환경에서 자란 100% 유기농 토마토입니다. 농약을 사용하지 않고 유기농 비료만을 사용하여 재배한 건강한 토마토로, 당도가 높고 과육이 단단합니다.",
-    features: ["유기농 인증", "당일 수확", "무농약", "GAP 인증"],
-    nutrition: "비타민C, 리코펜이 풍부하여 항산화 효과가 뛰어나며, 면역력 증진에 도움을 줍니다.",
-    storage: "냉장보관 시 7~10일 보관 가능",
-    origin: "국산 (경북 안동)",
-    weight: "1kg (약 8~10개)",
-    harvest: "2024년 3월 수확"
-  };
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) {
+        setError("상품 ID가 없습니다.");
+        setLoading(false);
+        return;
+      }
+      try {
+        const productId = parseInt(id, 10);
+        const data = await getProductById(productId);
+        setProduct(data);
+      } catch (err) {
+        setError("상품 정보를 불러오는 데 실패했습니다.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
 
   const handleAddToCart = () => {
+    if (!product) return;
     for (let i = 0; i < quantity; i++) {
       addItem({
-        id: product.id,
+        id: String(product.productId),
         name: product.name,
         price: product.price,
-        originalPrice: product.originalPrice,
-        image: product.images[0],
-        farm: product.farmer.farm
+        image: tomatoesImage, // Placeholder
+        farm: product.seller.sellerName
       });
     }
     toast({
@@ -73,6 +91,7 @@ const ProductDetail = () => {
     });
   };
 
+  // Mock reviews until API is ready
   const reviews = [
     {
       id: 1,
@@ -92,6 +111,19 @@ const ProductDetail = () => {
     }
   ];
 
+  if (loading) {
+    return <div className="min-h-screen bg-background flex items-center justify-center"><p>상품 정보를 불러오는 중...</p></div>;
+  }
+
+  if (error || !product) {
+    return <div className="min-h-screen bg-background flex items-center justify-center"><p className="text-red-500">{error || "상품을 찾을 수 없습니다."}</p></div>;
+  }
+
+  const productImages = product.images?.length ? product.images.map(img => img.url) : [tomatoesImage, tomatoesImage, tomatoesImage];
+  const rating = product.rating || 4.5; // Placeholder
+  const reviewCount = product.reviewCount || reviews.length; // Placeholder
+  const discount = product.discountValue > 0 ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100) : 0;
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -101,9 +133,9 @@ const ProductDetail = () => {
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
           <Link to="/" className="hover:text-primary">홈</Link>
           <span>/</span>
-          <Link to="/category/vegetable" className="hover:text-primary">채소</Link>
+          <Link to={`/category/${product.category.toLowerCase()}`} className="hover:text-primary">{product.category}</Link>
           <span>/</span>
-          <span className="text-foreground">토마토</span>
+          <span className="text-foreground">{product.name}</span>
         </nav>
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -111,13 +143,13 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="aspect-square bg-secondary rounded-xl overflow-hidden">
               <img 
-                src={product.images[selectedImage]} 
+                src={productImages[selectedImage]} 
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="flex space-x-2">
-              {product.images.map((image, index) => (
+              {productImages.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
@@ -150,31 +182,31 @@ const ProductDetail = () => {
                     <Star 
                       key={i} 
                       className={`w-4 h-4 ${
-                        i < Math.floor(product.rating) 
+                        i < Math.floor(rating) 
                           ? 'text-accent fill-current' 
                           : 'text-gray-300'
                       }`} 
                     />
                   ))}
-                  <span className="text-sm font-medium ml-2">{product.rating}</span>
+                  <span className="text-sm font-medium ml-2">{rating.toFixed(1)}</span>
                 </div>
                 <span className="text-sm text-muted-foreground">
-                  ({product.reviewCount}개 리뷰)
+                  ({reviewCount}개 리뷰)
                 </span>
               </div>
 
               <div className="flex items-center space-x-3">
-                {product.discount && (
+                {discount > 0 && (
                   <Badge className="bg-accent text-accent-foreground">
-                    {product.discount}% 할인
+                    {discount}% 할인
                   </Badge>
                 )}
                 <span className="text-3xl font-bold text-primary">
                   {product.price.toLocaleString()}원
                 </span>
-                {product.originalPrice && (
+                {product.discountValue > 0 && (
                   <span className="text-lg text-muted-foreground line-through">
-                    {product.originalPrice.toLocaleString()}원
+                    {(product.price + product.discountValue).toLocaleString()}원
                   </span>
                 )}
               </div>
@@ -188,25 +220,13 @@ const ProductDetail = () => {
                     <Leaf className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">{product.farmer.name}</h3>
-                    <p className="text-sm text-muted-foreground">{product.farmer.farm}</p>
-                    <div className="flex items-center space-x-2 text-sm">
-                      <MapPin className="w-3 h-3" />
-                      <span>{product.farmer.location}</span>
-                      <span>•</span>
-                      <span>{product.farmer.experience}</span>
-                    </div>
+                    <h3 className="font-semibold">{product.seller.sellerName}</h3>
+                    <p className="text-sm text-muted-foreground">농장 정보</p> 
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="flex items-center space-x-1">
-                    <Star className="w-4 h-4 text-accent fill-current" />
-                    <span className="font-medium">{product.farmer.rating}</span>
-                  </div>
-                  <Button variant="outline" size="sm" className="mt-2">
-                    농장 보기
-                  </Button>
-                </div>
+                <Button variant="outline" size="sm" className="mt-2">
+                  농장 보기
+                </Button>
               </div>
             </Card>
 
@@ -258,7 +278,7 @@ const ProductDetail = () => {
 
             {/* Delivery Info */}
             <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="space-y-2">
+               <div className="space-y-2">
                 <Truck className="w-8 h-8 mx-auto text-primary" />
                 <div className="text-sm">
                   <div className="font-medium">당일배송</div>
@@ -288,7 +308,7 @@ const ProductDetail = () => {
           <Tabs defaultValue="description" className="w-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="description">상품정보</TabsTrigger>
-              <TabsTrigger value="reviews">리뷰 ({product.reviewCount})</TabsTrigger>
+              <TabsTrigger value="reviews">리뷰 ({reviewCount})</TabsTrigger>
               <TabsTrigger value="qna">문의하기</TabsTrigger>
               <TabsTrigger value="delivery">배송/교환</TabsTrigger>
             </TabsList>
@@ -297,39 +317,6 @@ const ProductDetail = () => {
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4">상품 설명</h3>
                 <p className="text-muted-foreground mb-6">{product.description}</p>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold mb-3">상품 특징</h4>
-                    <ul className="space-y-2">
-                      {product.features.map((feature, index) => (
-                        <li key={index} className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-primary rounded-full"></div>
-                          <span className="text-sm">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <span className="font-medium text-sm">원산지: </span>
-                      <span className="text-sm text-muted-foreground">{product.origin}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-sm">중량: </span>
-                      <span className="text-sm text-muted-foreground">{product.weight}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-sm">수확일: </span>
-                      <span className="text-sm text-muted-foreground">{product.harvest}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-sm">보관방법: </span>
-                      <span className="text-sm text-muted-foreground">{product.storage}</span>
-                    </div>
-                  </div>
-                </div>
               </Card>
             </TabsContent>
             

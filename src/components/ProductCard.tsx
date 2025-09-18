@@ -13,24 +13,24 @@ interface ProductCardProps {
   price: number;
   originalPrice?: number;
   image: string;
-  rating: number;
-  reviewCount: number;
-  farm: string;
+  rating?: number;
+  reviewCount?: number;
+  farm?: string;
   isOrganic?: boolean;
   discount?: number;
 }
 
-const ProductCard = ({ 
+const ProductCard = ({
   id,
-  name, 
-  price, 
-  originalPrice, 
-  image, 
-  rating, 
-  reviewCount, 
-  farm, 
+  name,
+  price,
+  originalPrice,
+  image,
+  rating = 0,
+  reviewCount = 0,
+  farm = "정보 없음",
   isOrganic = false,
-  discount 
+  discount,
 }: ProductCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -50,7 +50,7 @@ const ProductCard = ({
       price,
       originalPrice,
       image,
-      farm
+      farm,
     });
     toast({
       title: "장바구니에 추가되었습니다",
@@ -59,9 +59,9 @@ const ProductCard = ({
   };
 
   return (
-    <Card 
+    <Card
       className={`group cursor-pointer smooth-transition border-border hover:shadow-lg ${
-        isHovered ? 'product-card-hover' : ''
+        isHovered ? "product-card-hover" : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -70,14 +70,14 @@ const ProductCard = ({
       <CardContent className="p-0">
         {/* 상품 이미지 */}
         <div className="relative overflow-hidden rounded-t-lg">
-          <img 
-            src={image} 
+          <img
+            src={image}
             alt={name}
             className="w-full h-48 object-cover smooth-transition group-hover:scale-105"
           />
-          
+
           {/* 할인 배지 */}
-          {discount && (
+          {discount && discount > 0 && (
             <Badge className="absolute top-2 left-2 bg-secondary text-secondary-foreground">
               {discount}% 할인
             </Badge>
@@ -95,21 +95,23 @@ const ProductCard = ({
             variant="ghost"
             size="icon"
             className={`absolute top-2 right-12 w-8 h-8 rounded-full bg-white/80 hover:bg-white smooth-transition ${
-              isLiked ? 'text-red-500' : 'text-muted-foreground'
+              isLiked ? "text-red-500" : "text-muted-foreground"
             }`}
             onClick={(e) => {
               e.stopPropagation();
               setIsLiked(!isLiked);
             }}
           >
-            <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
+            <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
           </Button>
 
           {/* 호버 시 장바구니 버튼 */}
-          <div className={`absolute bottom-2 right-2 smooth-transition ${
-            isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
-          }`}>
-            <Button 
+          <div
+            className={`absolute bottom-2 right-2 smooth-transition ${
+              isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+            }`}
+          >
+            <Button
               size="icon"
               className="w-8 h-8 rounded-full bg-primary hover:bg-primary-hover text-primary-foreground shadow-lg"
               onClick={handleAddToCart}
@@ -122,7 +124,7 @@ const ProductCard = ({
         {/* 상품 정보 */}
         <div className="p-4 space-y-3">
           {/* 농장명 */}
-          <p className="text-sm text-muted-foreground">{farm}</p>
+          {farm && <p className="text-sm text-muted-foreground">{farm}</p>}
 
           {/* 상품명 */}
           <h3 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary smooth-transition">
@@ -130,23 +132,25 @@ const ProductCard = ({
           </h3>
 
           {/* 평점 */}
-          <div className="flex items-center space-x-1">
-            <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i}
-                  className={`w-3 h-3 ${
-                    i < Math.floor(rating) 
-                      ? 'text-yellow-400 fill-current' 
-                      : 'text-gray-300'
-                  }`}
-                />
-              ))}
+          {rating > 0 && (
+            <div className="flex items-center space-x-1">
+              <div className="flex items-center">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-3 h-3 ${
+                      i < Math.floor(rating)
+                        ? "text-yellow-400 fill-current"
+                        : "text-gray-300"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-muted-foreground">
+                {rating.toFixed(1)} ({reviewCount})
+              </span>
             </div>
-            <span className="text-sm text-muted-foreground">
-              {rating} ({reviewCount})
-            </span>
-          </div>
+          )}
 
           {/* 가격 */}
           <div className="flex items-center justify-between">
@@ -155,16 +159,16 @@ const ProductCard = ({
                 <span className="text-lg font-bold text-primary">
                   {price.toLocaleString()}원
                 </span>
-                {originalPrice && (
+                {originalPrice && originalPrice > price && (
                   <span className="text-sm text-muted-foreground line-through">
                     {originalPrice.toLocaleString()}원
                   </span>
                 )}
               </div>
             </div>
-            
+
             {/* 데스크톱 장바구니 버튼 */}
-            <Button 
+            <Button
               size="sm"
               className="hidden md:flex smooth-transition bg-primary hover:bg-primary-hover text-primary-foreground"
               onClick={handleAddToCart}

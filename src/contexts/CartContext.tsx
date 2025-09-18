@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { createOrder } from '@/lib/api';
 
 export interface CartItem {
   id: string;
@@ -30,6 +31,7 @@ const CartContext = createContext<{
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  checkout: (memberId: number, address: string) => Promise<any>;
 } | null>(null);
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
@@ -139,6 +141,32 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: 'CLEAR_CART' });
   };
 
+  const checkout = async (memberId: number, address: string) => {
+    const orderItemList = state.items.map(item => ({
+      productId: parseInt(item.id, 10),
+      quantity: item.quantity,
+      unitPrice: item.price,
+      discountValue: item.originalPrice ? item.originalPrice - item.price : 0,
+      totalPrice: item.price * item.quantity,
+    }));
+
+    const orderData = {
+      memberId,
+      address,
+      status: 'PENDING',
+      orderItemList,
+    };
+
+    try {
+      const response = await createOrder(orderData);
+      dispatch({ type: 'CLEAR_CART' });
+      return response;
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      throw error;
+    }
+  };
+
   return (
     <CartContext.Provider value={{
       state,
@@ -147,6 +175,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       removeItem,
       updateQuantity,
       clearCart,
+      checkout,
     }}>
       {children}
     </CartContext.Provider>

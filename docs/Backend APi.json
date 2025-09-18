@@ -1,0 +1,3785 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Shopp Management API",
+        "description": "농산물 거래를 위한 REST API",
+        "contact": {
+            "name": "개발팀",
+            "email": "dev@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:9000",
+            "description": "Generated server url"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Question",
+            "description": "1:1 문의 API"
+        },
+        {
+            "name": "Review",
+            "description": "리뷰 관리 API"
+        },
+        {
+            "name": "ReviewPhoto",
+            "description": "리뷰 사진 관리 API"
+        },
+        {
+            "name": "ProductQuestionAnswer",
+            "description": "상품 문의 답변 API"
+        },
+        {
+            "name": "ProductQuestion",
+            "description": "상품 문의 API"
+        },
+        {
+            "name": "ProductImage",
+            "description": "상품 이미지 관리 API"
+        },
+        {
+            "name": "Product",
+            "description": "상품 관리 API"
+        },
+        {
+            "name": "Seller",
+            "description": "판매자 관리 API"
+        },
+        {
+            "name": "Order",
+            "description": "주문 관리 API"
+        },
+        {
+            "name": "ProductQuestionPhoto",
+            "description": "상품 문의 사진 API"
+        },
+        {
+            "name": "Member",
+            "description": "회원 관리 API"
+        },
+        {
+            "name": "OrderItem",
+            "description": "주문 항목 관리 API"
+        },
+        {
+            "name": "QuestionAnswer",
+            "description": "1:1 문의 답변 API"
+        }
+    ],
+    "paths": {
+        "/api/reviews/{reviewId}/photos/{photoId}": {
+            "put": {
+                "tags": [
+                    "ReviewPhoto"
+                ],
+                "summary": "리뷰 사진 정보 수정",
+                "description": "특정 사진의 URL 또는 정렬 순서를 수정합니다.",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "소속 리뷰 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "photoId",
+                        "in": "path",
+                        "description": "수정할 사진 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ReviewPhotoReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReviewPhotoRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ReviewPhoto"
+                ],
+                "summary": "리뷰 사진 삭제",
+                "description": "특정 사진을 삭제합니다.",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "소속 리뷰 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "photoId",
+                        "in": "path",
+                        "description": "삭제할 사진 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "삭제 성공"
+                    }
+                }
+            }
+        },
+        "/api/questions/id/{id}": {
+            "get": {
+                "tags": [
+                    "Question"
+                ],
+                "summary": "ID로 1:1 문의 조회",
+                "description": "문의 ID를 사용하여 특정 1:1 문의를 조회합니다.",
+                "operationId": "findByQuestionId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "조회할 문의의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Question"
+                ],
+                "summary": "1:1 문의 수정",
+                "description": "기존 1:1 문의의 제목과 내용을 수정합니다.",
+                "operationId": "updateQuestion",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "수정할 문의의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/QuestionReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Question"
+                ],
+                "summary": "1:1 문의 삭제",
+                "description": "1:1 문의와 관련 답변을 함께 삭제합니다.",
+                "operationId": "deleteQuestion",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "삭제할 문의의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "삭제 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/questionAnswers/id/{id}": {
+            "get": {
+                "tags": [
+                    "QuestionAnswer"
+                ],
+                "summary": "답변 ID로 답변 조회",
+                "description": "답변 ID를 사용하여 특정 답변을 조회합니다.",
+                "operationId": "findReplyByAnswerId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "조회할 답변의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "QuestionAnswer"
+                ],
+                "summary": "1:1 문의 답변 수정",
+                "description": "기존 답변의 내용을 수정합니다.",
+                "operationId": "updateReply",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "수정할 답변의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/QuestionAnswerReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "QuestionAnswer"
+                ],
+                "summary": "1:1 문의 답변 삭제",
+                "description": "답변을 시스템에서 삭제합니다.",
+                "operationId": "deleteReply",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "삭제할 답변의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "삭제 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}/images/{imageId}": {
+            "put": {
+                "tags": [
+                    "ProductImage"
+                ],
+                "summary": "상품 이미지 정보 수정",
+                "description": "특정 이미지의 URL, 대체 텍스트, 정렬 순서를 수정합니다.",
+                "operationId": "update_1",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "소속 상품 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "수정할 이미지 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductImageReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductImageRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ProductImage"
+                ],
+                "summary": "상품 이미지 삭제",
+                "description": "특정 이미지를 삭제합니다.",
+                "operationId": "delete_1",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "소속 상품 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "삭제할 이미지 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "삭제 성공"
+                    }
+                }
+            }
+        },
+        "/api/product-questions/{questionId}": {
+            "put": {
+                "tags": [
+                    "ProductQuestion"
+                ],
+                "summary": "상품 문의 수정",
+                "description": "기존 상품 문의 내용을 수정합니다.",
+                "operationId": "updateProductQuestion",
+                "parameters": [
+                    {
+                        "name": "questionId",
+                        "in": "path",
+                        "description": "수정할 문의의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductQuestionReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ProductQuestion"
+                ],
+                "summary": "상품 문의 삭제",
+                "description": "상품 문의와 관련된 답변, 사진을 모두 함께 삭제합니다.",
+                "operationId": "deleteProductQuestion",
+                "parameters": [
+                    {
+                        "name": "questionId",
+                        "in": "path",
+                        "description": "삭제할 문의의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "삭제 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders/{orderId}": {
+            "put": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "주문 정보 수정",
+                "description": "기존 주문의 상태 및 주소 정보를 수정합니다.",
+                "operationId": "updateOrder",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "description": "수정할 주문의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "404": {
+                        "description": "존재하지 않는 주문",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "주문 삭제",
+                "description": "주문을 시스템에서 삭제합니다.",
+                "operationId": "deleteOrder",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "description": "삭제할 주문의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "삭제 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order-items/{orderItemId}": {
+            "put": {
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "주문 항목 수정",
+                "description": "기존 주문 항목의 정보를 수정합니다.",
+                "operationId": "updateOrderItem",
+                "parameters": [
+                    {
+                        "name": "orderItemId",
+                        "in": "path",
+                        "description": "수정할 주문 항목의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderItemReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "주문 항목 삭제",
+                "description": "주문 항목을 시스템에서 삭제합니다.",
+                "operationId": "deleteOrderItem",
+                "parameters": [
+                    {
+                        "name": "orderItemId",
+                        "in": "path",
+                        "description": "삭제할 주문 항목의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "삭제 성공, 삭제된 주문 항목 ID 반환",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/members/id/{id}": {
+            "get": {
+                "tags": [
+                    "Member"
+                ],
+                "summary": "ID로 회원 조회",
+                "description": "회원 ID를 이용하여 특정 회원의 정보를 조회합니다.",
+                "operationId": "findById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "조회할 회원의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MemberRes"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "존재하지 않는 회원",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Member"
+                ],
+                "summary": "회원 정보 수정",
+                "description": "기존 회원의 정보를 수정합니다.",
+                "operationId": "updateMember",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "수정할 회원의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MemberUpdateReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "202": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MemberRes"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "존재하지 않는 회원",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Member"
+                ],
+                "summary": "회원 탈퇴",
+                "description": "회원을 시스템에서 논리적으로 삭제합니다 (Soft Delete).",
+                "operationId": "deleteMember",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "삭제할 회원의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "삭제 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sellers": {
+            "get": {
+                "tags": [
+                    "Seller"
+                ],
+                "summary": "전체 판매자 목록 조회",
+                "description": "시스템에 등록된 모든 판매자 목록을 조회합니다.",
+                "operationId": "listAll",
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SellerRes"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Seller"
+                ],
+                "summary": "판매자 등록",
+                "description": "기존 회원을 판매자로 등록합니다.",
+                "operationId": "create",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SellerReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "등록 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SellerRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews": {
+            "post": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "리뷰 생성",
+                "description": "상품에 대한 리뷰를 사진 URL과 함께 생성합니다.",
+                "operationId": "create_1",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ReviewReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "생성 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReviewRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews/{reviewId}/photos": {
+            "get": {
+                "tags": [
+                    "ReviewPhoto"
+                ],
+                "summary": "리뷰의 사진 목록 조회",
+                "description": "특정 리뷰에 첨부된 모든 사진을 정렬 순서대로 조회합니다.",
+                "operationId": "list",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "사진 목록을 조회할 리뷰 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReviewPhotoRes"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ReviewPhoto"
+                ],
+                "summary": "리뷰 사진 추가",
+                "description": "특정 리뷰에 사진을 추가합니다.",
+                "operationId": "add",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "사진을 추가할 리뷰 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ReviewPhotoReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "추가 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReviewPhotoRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews/{reviewId}/photos/replace": {
+            "post": {
+                "tags": [
+                    "ReviewPhoto"
+                ],
+                "summary": "리뷰 사진 전체 교체",
+                "description": "기존 사진을 모두 삭제하고 새 사진 목록으로 교체합니다.",
+                "operationId": "replaceAll",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "사진을 교체할 리뷰 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ReviewPhotoReq"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "교체 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReviewPhotoRes"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/questions": {
+            "get": {
+                "tags": [
+                    "Question"
+                ],
+                "summary": "전체 1:1 문의 목록 조회",
+                "description": "페이지 단위로 전체 1:1 문의 목록을 조회합니다.",
+                "operationId": "findAllQuestion",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Zero-based page index (0..N)",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The size of the page to be returned",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Question"
+                ],
+                "summary": "1:1 문의 생성",
+                "description": "새로운 1:1 문의를 생성합니다.",
+                "operationId": "createQuestion",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/QuestionReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "생성 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/questionAnswers": {
+            "post": {
+                "tags": [
+                    "QuestionAnswer"
+                ],
+                "summary": "1:1 문의 답변 생성",
+                "description": "특정 1:1 문의에 대한 답변을 생성합니다.",
+                "operationId": "createReply",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/QuestionAnswerReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "생성 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "전체 상품 목록 조회",
+                "description": "시스템에 등록된 모든 상품 목록을 조회합니다.",
+                "operationId": "listAll_1",
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "신규 상품 등록",
+                "description": "새로운 상품 정보를 시스템에 등록합니다.",
+                "operationId": "create_2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "등록 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}/images": {
+            "get": {
+                "tags": [
+                    "ProductImage"
+                ],
+                "summary": "상품별 이미지 목록 조회",
+                "description": "특정 상품에 속한 모든 이미지를 정렬 순서대로 조회합니다.",
+                "operationId": "list_1",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "이미지 목록을 조회할 상품 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductImageRes"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ProductImage"
+                ],
+                "summary": "상품 이미지 추가",
+                "description": "특정 상품에 새로운 이미지를 추가합니다. (sortOrder 미지정 시 마지막 순서로 자동 지정)",
+                "operationId": "add_1",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "이미지를 추가할 상품 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductImageReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "추가 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductImageRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}/images/{imageId}/move/{pos}": {
+            "post": {
+                "tags": [
+                    "ProductImage"
+                ],
+                "summary": "상품 이미지 순서 이동",
+                "description": "특정 이미지의 정렬 순서를 지정된 위치(1-based)로 이동시킵니다.",
+                "operationId": "move",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "소속 상품 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "description": "이동할 이미지 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "pos",
+                        "in": "path",
+                        "description": "이동할 위치 (1부터 시작)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "이동 성공"
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}/images/replace": {
+            "post": {
+                "tags": [
+                    "ProductImage"
+                ],
+                "summary": "상품 이미지 전체 교체",
+                "description": "특정 상품의 모든 이미지를 삭제하고 새로운 이미지 목록으로 교체합니다.",
+                "operationId": "replaceAll_1",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "이미지를 교체할 상품 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ProductImageReq"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "교체 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductImageRes"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-questions": {
+            "post": {
+                "tags": [
+                    "ProductQuestion"
+                ],
+                "summary": "상품 문의 생성",
+                "description": "특정 상품에 대한 문의를 생성합니다.",
+                "operationId": "createProductQuestion",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductQuestionReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "생성 성공, 생성된 문의 ID 반환",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-question-photos": {
+            "post": {
+                "tags": [
+                    "ProductQuestionPhoto"
+                ],
+                "summary": "상품 문의 사진 목록 저장",
+                "description": "상품 문의에 첨부될 사진 목록을 한 번에 저장합니다.",
+                "operationId": "saveProductQuestionPhotos",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ProductQuestionPhoto"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "저장 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-question-answers": {
+            "post": {
+                "tags": [
+                    "ProductQuestionAnswer"
+                ],
+                "summary": "상품 문의 답변 생성",
+                "description": "특정 상품 문의에 대한 답변을 생성합니다.",
+                "operationId": "createProductQuestionAnswer",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductQuestionAnswerReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "생성 성공, 생성된 답변 ID 반환",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders/": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "회원의 전체 주문 조회",
+                "description": "특정 회원의 모든 주문 목록을 조회합니다.",
+                "operationId": "findOrdersByMember",
+                "parameters": [
+                    {
+                        "name": "memberId",
+                        "in": "query",
+                        "description": "주문 목록을 조회할 회원의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "존재하지 않는 회원",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "주문 생성",
+                "description": "새로운 주문을 생성합니다.",
+                "operationId": "createOrder",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "주문 생성 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderReq"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "주문 생성 실패",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order-items": {
+            "post": {
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "주문 항목 생성",
+                "description": "주문에 포함될 개별 항목을 생성합니다.",
+                "operationId": "createOrderItem",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderItemReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "생성 성공, 생성된 주문 항목 ID 반환",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/members": {
+            "get": {
+                "tags": [
+                    "Member"
+                ],
+                "summary": "전체 회원 목록 조회",
+                "description": "시스템에 등록된 모든 활성 회원을 페이지 단위로 조회합니다.",
+                "operationId": "findAll",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Zero-based page index (0..N)",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The size of the page to be returned",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Member"
+                ],
+                "summary": "회원가입",
+                "description": "새로운 회원을 시스템에 등록합니다.",
+                "operationId": "signUp",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignUpReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "회원가입 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MemberRes"
+                                }
+                            }
+                        }
+                    },
+                    "417": {
+                        "description": "중복된 이메일",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sellers/{memberId}": {
+            "get": {
+                "tags": [
+                    "Seller"
+                ],
+                "summary": "판매자 정보 조회",
+                "description": "Member ID를 사용하여 특정 판매자의 정보를 조회합니다.",
+                "operationId": "get",
+                "parameters": [
+                    {
+                        "name": "memberId",
+                        "in": "path",
+                        "description": "조회할 판매자의 회원 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SellerRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Seller"
+                ],
+                "summary": "판매자 삭제",
+                "description": "판매자 정보를 시스템에서 삭제합니다.",
+                "operationId": "delete_2",
+                "parameters": [
+                    {
+                        "name": "memberId",
+                        "in": "path",
+                        "description": "삭제할 판매자의 회원 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "삭제 성공"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Seller"
+                ],
+                "summary": "판매자 정보 수정",
+                "description": "기존 판매자의 정보를 부분적으로 수정합니다.",
+                "operationId": "update_2",
+                "parameters": [
+                    {
+                        "name": "memberId",
+                        "in": "path",
+                        "description": "수정할 판매자의 회원 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SellerReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SellerRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews/{reviewId}": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "리뷰 단건 조회",
+                "description": "리뷰 ID로 특정 리뷰를 조회합니다.",
+                "operationId": "get_1",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "조회할 리뷰의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReviewRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "리뷰 삭제",
+                "description": "리뷰와 관련된 사진을 함께 삭제합니다.",
+                "operationId": "delete_3",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "삭제할 리뷰의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "삭제 성공"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "리뷰 수정",
+                "description": "기존 리뷰의 평점, 내용, 사진 목록을 수정(교체)합니다.",
+                "operationId": "update_3",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "수정할 리뷰의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ReviewReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReviewRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "상품 상세 정보 조회",
+                "description": "상품 ID를 이용하여 특정 상품의 상세 정보를 조회합니다.",
+                "operationId": "detail",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "조회할 상품의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductRes"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "존재하지 않는 상품",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "상품 삭제",
+                "description": "상품 정보를 시스템에서 삭제합니다.",
+                "operationId": "delete_4",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "삭제할 상품의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "삭제 성공"
+                    },
+                    "404": {
+                        "description": "존재하지 않는 상품"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "상품 정보 부분 수정",
+                "description": "기존 상품의 정보를 부분적으로 수정합니다.",
+                "operationId": "update_4",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "수정할 상품의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProductReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "수정 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductRes"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "존재하지 않는 상품",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}/price": {
+            "patch": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "상품 가격 변경",
+                "description": "상품의 판매 가격을 변경합니다.",
+                "operationId": "changePrice",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "가격을 변경할 상품의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PriceReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "가격 변경 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}/discount": {
+            "patch": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "상품 할인액 변경",
+                "description": "상품의 할인 금액을 변경합니다.",
+                "operationId": "changeDiscount",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "할인을 변경할 상품의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DiscountReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "할인 변경 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}/active": {
+            "patch": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "상품 활성/비활성 상태 변경",
+                "description": "상품의 판매 상태를 활성 또는 비활성으로 변경합니다.",
+                "operationId": "changeActive",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "상태를 변경할 상품의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ActiveReq"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "상태 변경 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews/{reviewId}/photos/cover": {
+            "get": {
+                "tags": [
+                    "ReviewPhoto"
+                ],
+                "summary": "리뷰의 대표 사진 조회",
+                "description": "특정 리뷰의 대표 사진(정렬 1순위)을 조회합니다.",
+                "operationId": "cover",
+                "parameters": [
+                    {
+                        "name": "reviewId",
+                        "in": "path",
+                        "description": "대표 사진을 조회할 리뷰 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReviewPhotoRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews/{productId}/reviews": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "상품별 리뷰 목록 조회",
+                "description": "특정 상품에 달린 모든 리뷰 목록을 조회합니다.",
+                "operationId": "listByProduct",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "리뷰 목록을 조회할 상품의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReviewRes"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/questions/title/{title}": {
+            "get": {
+                "tags": [
+                    "Question"
+                ],
+                "summary": "제목으로 1:1 문의 검색",
+                "description": "제목에 포함된 키워드로 1:1 문의를 검색합니다.",
+                "operationId": "findByTitle",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "description": "검색할 제목 키워드",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Zero-based page index (0..N)",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The size of the page to be returned",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "검색 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/questions/memberId/{id}": {
+            "get": {
+                "tags": [
+                    "Question"
+                ],
+                "summary": "회원 ID로 1:1 문의 목록 조회",
+                "description": "특정 회원이 작성한 모든 1:1 문의 목록을 조회합니다.",
+                "operationId": "findByMemberId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "문의 목록을 조회할 회원의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Zero-based page index (0..N)",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "The size of the page to be returned",
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/questionAnswers/questionId/{id}": {
+            "get": {
+                "tags": [
+                    "QuestionAnswer"
+                ],
+                "summary": "문의 ID로 답변 조회",
+                "description": "특정 1:1 문의에 달린 답변을 조회합니다.",
+                "operationId": "findReplyByQuestionId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "답변을 조회할 1:1 문의의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}/images/cover": {
+            "get": {
+                "tags": [
+                    "ProductImage"
+                ],
+                "summary": "상품 대표 이미지 조회",
+                "description": "특정 상품의 대표 이미지(정렬 1순위)를 조회합니다.",
+                "operationId": "cover_1",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "대표 이미지를 조회할 상품 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductImageRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/search": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "상품 이름으로 검색",
+                "description": "키워드가 포함된 상품 이름으로 상품을 검색합니다.",
+                "operationId": "search",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "검색할 키워드",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "사과"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "검색 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductRes"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/category/{category}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "카테고리별 상품 목록 조회",
+                "description": "특정 카테고리에 속하는 상품 목록을 카드 형태로 조회합니다.",
+                "operationId": "listByCategory",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "description": "조회할 상품 카테고리",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "채소",
+                                "과일",
+                                "수산물",
+                                "곡물",
+                                "기타"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductCardRes"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-questions/{productId}": {
+            "get": {
+                "tags": [
+                    "ProductQuestion"
+                ],
+                "summary": "상품별 문의 목록 조회",
+                "description": "특정 상품에 달린 모든 문의 목록을 조회합니다.",
+                "operationId": "findByProduct",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "description": "문의 목록을 조회할 상품의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-questions/{id}": {
+            "get": {
+                "tags": [
+                    "ProductQuestion"
+                ],
+                "summary": "상품 문의 상세 조회",
+                "description": "문의 ID로 특정 상품 문의의 상세 내용을 조회합니다.",
+                "operationId": "findByIdWithDetails",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "상세 조회할 문의의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-questions/member/{id}": {
+            "get": {
+                "tags": [
+                    "ProductQuestion"
+                ],
+                "summary": "회원별 문의 목록 조회",
+                "description": "특정 회원이 작성한 모든 상품 문의 목록을 조회합니다.",
+                "operationId": "findByMember",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "문의 목록을 조회할 회원의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-question-answers/{id}": {
+            "get": {
+                "tags": [
+                    "ProductQuestionAnswer"
+                ],
+                "summary": "상품 문의에 대한 답변 조회",
+                "description": "상품 문의 ID를 사용하여 해당하는 답변을 조회합니다.",
+                "operationId": "findByProductQuestion",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "답변을 조회할 상품 문의의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "주문 ID로 주문 조회",
+                "description": "주문 ID를 이용하여 특정 주문의 정보를 조회합니다.",
+                "operationId": "findOrderById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "조회할 주문의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "존재하지 않는 주문",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderRes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders/year": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "회원의 연도별 주문 조회",
+                "description": "특정 회원의 특정 연도 주문 목록을 조회합니다.",
+                "operationId": "findOrdersByYear",
+                "parameters": [
+                    {
+                        "name": "memberId",
+                        "in": "query",
+                        "description": "조회할 회원의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "description": "조회할 연도",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "example": 2024
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "존재하지 않는 회원",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order-items/product": {
+            "get": {
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "특정 상품이 포함된 모든 주문 항목 조회",
+                "description": "상품 ID를 사용하여 해당 상품이 포함된 모든 주문 항목을 조회합니다.",
+                "operationId": "findOrderItemsByProduct",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "query",
+                        "description": "조회할 상품의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order-items/order": {
+            "get": {
+                "tags": [
+                    "OrderItem"
+                ],
+                "summary": "특정 주문의 모든 항목 조회",
+                "description": "주문 ID를 사용하여 해당 주문에 속한 모든 항목을 조회합니다.",
+                "operationId": "findOrderItemsByOrder",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "query",
+                        "description": "항목을 조회할 주문의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/members/email/{email}": {
+            "get": {
+                "tags": [
+                    "Member"
+                ],
+                "summary": "Email로 회원 조회",
+                "description": "회원 이메일을 이용하여 특정 회원의 정보를 조회합니다.",
+                "operationId": "findByEmail",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "조회할 회원의 이메일",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MemberRes"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "존재하지 않는 회원",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProblemDetail"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/members/check/{email}": {
+            "get": {
+                "tags": [
+                    "Member"
+                ],
+                "summary": "이메일 중복 확인",
+                "description": "회원가입 시 이메일이 중복되는지 확인합니다.",
+                "operationId": "duplicateCheck",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "중복 확인할 이메일",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "확인 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "아이디 사용 가능"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-question-photos/{id}": {
+            "delete": {
+                "tags": [
+                    "ProductQuestionPhoto"
+                ],
+                "summary": "상품 문의 사진 삭제",
+                "description": "특정 상품 문의 사진을 삭제합니다.",
+                "operationId": "deleteProductQuestionPhoto",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "삭제할 사진의 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "삭제 성공",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ReviewPhotoReq": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "maxLength": 512,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "sortOrder": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "ReviewPhotoRes": {
+                "type": "object",
+                "properties": {
+                    "photoId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "url": {
+                        "type": "string"
+                    },
+                    "sortOrder": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "QuestionReq": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "type": "string"
+                    }
+                }
+            },
+            "QuestionAnswerReq": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    },
+                    "questionId": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "ProductImageReq": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "url": {
+                        "type": "string"
+                    },
+                    "altText": {
+                        "type": "string"
+                    },
+                    "sortOrder": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "ProductImageRes": {
+                "type": "object",
+                "properties": {
+                    "imageId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "url": {
+                        "type": "string"
+                    },
+                    "altText": {
+                        "type": "string"
+                    },
+                    "sortOrder": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "ProductQuestionPhotoReq": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    },
+                    "sortOrder": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "productQuestionId": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "ProductQuestionReq": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "OPEN",
+                            "ANSWERED",
+                            "CLOSED"
+                        ]
+                    },
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "productQuestionPhotoReqList": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductQuestionPhotoReq"
+                        }
+                    }
+                }
+            },
+            "Member": {
+                "type": "object",
+                "properties": {
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "phoneNum": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "ROLE_CUSTOMER",
+                            "ROLE_SELLER",
+                            "ROLE_ADMIN",
+                            "ROLE_DELETE"
+                        ]
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deletedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "Order": {
+                "type": "object",
+                "properties": {
+                    "orderId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "member": {
+                        "$ref": "#/components/schemas/Member"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "PENDING",
+                            "READY",
+                            "DONE"
+                        ]
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "orderItemList": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    }
+                }
+            },
+            "OrderItem": {
+                "type": "object",
+                "properties": {
+                    "orderItemId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "product": {
+                        "$ref": "#/components/schemas/Product"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "unitPrice": {
+                        "type": "number"
+                    },
+                    "discountValue": {
+                        "type": "number"
+                    },
+                    "totalPrice": {
+                        "type": "number"
+                    },
+                    "order": {
+                        "$ref": "#/components/schemas/Order"
+                    }
+                }
+            },
+            "OrderReq": {
+                "type": "object",
+                "properties": {
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "PENDING",
+                            "READY",
+                            "DONE"
+                        ]
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "orderItemList": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    }
+                }
+            },
+            "Product": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "채소",
+                            "과일",
+                            "수산물",
+                            "곡물",
+                            "기타"
+                        ]
+                    },
+                    "discountValue": {
+                        "type": "number"
+                    },
+                    "isActive": {
+                        "type": "boolean"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "seller": {
+                        "$ref": "#/components/schemas/Seller"
+                    }
+                }
+            },
+            "Seller": {
+                "type": "object",
+                "properties": {
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "sellerName": {
+                        "type": "string"
+                    },
+                    "sellerIntro": {
+                        "type": "string"
+                    },
+                    "sellerRegNo": {
+                        "type": "string"
+                    },
+                    "sellerAddress": {
+                        "type": "string"
+                    },
+                    "postalCode": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "authenticated",
+                            "BASIC",
+                            "Unauthenticated"
+                        ]
+                    },
+                    "member": {
+                        "$ref": "#/components/schemas/Member"
+                    }
+                }
+            },
+            "ProblemDetail": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "detail": {
+                        "type": "string"
+                    },
+                    "instance": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "properties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "OrderItemReq": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "unitPrice": {
+                        "type": "number"
+                    },
+                    "discountValue": {
+                        "type": "number"
+                    },
+                    "totalPrice": {
+                        "type": "number"
+                    },
+                    "orderId": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "MemberUpdateReq": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "phoneNum": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "MemberRes": {
+                "type": "object",
+                "properties": {
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "phoneNum": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SellerReq": {
+                "type": "object",
+                "properties": {
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "sellerName": {
+                        "type": "string"
+                    },
+                    "sellerIntro": {
+                        "type": "string"
+                    },
+                    "sellerRegNo": {
+                        "type": "string"
+                    },
+                    "sellerAddress": {
+                        "type": "string"
+                    },
+                    "postalCode": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "authenticated",
+                            "BASIC",
+                            "Unauthenticated"
+                        ]
+                    }
+                }
+            },
+            "SellerRes": {
+                "type": "object",
+                "properties": {
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "sellerName": {
+                        "type": "string"
+                    },
+                    "sellerIntro": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ReviewReq": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "rating": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "photoUrls": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "ReviewRes": {
+                "type": "object",
+                "properties": {
+                    "reviewId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "rating": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "memberName": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ProductReq": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "채소",
+                            "과일",
+                            "수산물",
+                            "곡물",
+                            "기타"
+                        ]
+                    },
+                    "discountValue": {
+                        "type": "number"
+                    },
+                    "isActive": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ProductRes": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "채소",
+                            "과일",
+                            "수산물",
+                            "곡물",
+                            "기타"
+                        ]
+                    },
+                    "discountValue": {
+                        "type": "number"
+                    },
+                    "isActive": {
+                        "type": "boolean"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "seller": {
+                        "$ref": "#/components/schemas/SellerRes"
+                    }
+                }
+            },
+            "ProductQuestion": {
+                "type": "object",
+                "properties": {
+                    "questionId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "product": {
+                        "$ref": "#/components/schemas/Product"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "OPEN",
+                            "ANSWERED",
+                            "CLOSED"
+                        ]
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "member": {
+                        "$ref": "#/components/schemas/Member"
+                    }
+                }
+            },
+            "ProductQuestionPhoto": {
+                "type": "object",
+                "properties": {
+                    "photoId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "url": {
+                        "type": "string"
+                    },
+                    "sortOrder": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "productQuestion": {
+                        "$ref": "#/components/schemas/ProductQuestion"
+                    }
+                }
+            },
+            "ProductQuestionAnswerReq": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    },
+                    "productQuestionId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "memberId": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "SignUpReq": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "phoneNum": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PriceReq": {
+                "required": [
+                    "price"
+                ],
+                "type": "object",
+                "properties": {
+                    "price": {
+                        "minimum": 0.0,
+                        "exclusiveMinimum": false,
+                        "type": "number",
+                        "description": "새로운 가격",
+                        "example": 15000.0
+                    }
+                },
+                "description": "상품 가격 변경 요청 DTO"
+            },
+            "DiscountReq": {
+                "required": [
+                    "discount"
+                ],
+                "type": "object",
+                "properties": {
+                    "discount": {
+                        "minimum": 0.0,
+                        "exclusiveMinimum": false,
+                        "type": "number",
+                        "description": "새로운 할인액",
+                        "example": 1500.0
+                    }
+                },
+                "description": "상품 할인액 변경 요청 DTO"
+            },
+            "ActiveReq": {
+                "type": "object",
+                "properties": {
+                    "active": {
+                        "type": "boolean",
+                        "description": "활성화 여부",
+                        "example": true
+                    }
+                },
+                "description": "상품 활성 상태 요청 DTO"
+            },
+            "ProductCardRes": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "discountValue": {
+                        "type": "number"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "채소",
+                            "과일",
+                            "수산물",
+                            "곡물",
+                            "기타"
+                        ]
+                    }
+                }
+            },
+            "OrderItemRes": {
+                "type": "object",
+                "properties": {
+                    "orderItemId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "productId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "unitPrice": {
+                        "type": "number"
+                    },
+                    "discountValue": {
+                        "type": "number"
+                    },
+                    "totalPrice": {
+                        "type": "number"
+                    },
+                    "orderId": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "OrderRes": {
+                "type": "object",
+                "properties": {
+                    "orderId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "memberRes": {
+                        "$ref": "#/components/schemas/MemberRes"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "PENDING",
+                            "READY",
+                            "DONE"
+                        ]
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "orderItemList": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItemRes"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

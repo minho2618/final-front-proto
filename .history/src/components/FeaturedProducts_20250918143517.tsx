@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ProductCard from "./ProductCard";
 import { Button } from "@/components/ui/button";
-import { getAllProducts } from "@/lib/api";
+import { getProducts } from "@/lib/api";
 import tomatoesImage from "@/assets/tomatoes.jpg"; // Placeholder
 
 // Define the Product type based on the API response
@@ -30,7 +30,7 @@ const FeaturedProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getAllProducts();
+        const data = await getProducts();
         // The API returns a single object with a 'content' array of products.
         // Or it might be a direct array. Let's check the actual response structure.
         // For now, I'll assume data is the array.

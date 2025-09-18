@@ -1,109 +1,96 @@
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Camera, 
-  Save, 
-  Shield,
-  Store,
-  Bell,
-  CreditCard
-} from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User, Mail, Phone, MapPin, Camera, Save, Store } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { getMemberById, updateMember } from "@/lib/api";
+
+interface Member {
+  memberId: number;
+  email: string;
+  phoneNum: string;
+  address: string;
+  name: string;
+  role: string;
+}
 
 export default function Profile() {
-  const { toast } = useToast()
-  const [isEditing, setIsEditing] = useState(false)
-  const [isSeller, setIsSeller] = useState(false)
-  const [formData, setFormData] = useState({
-    name: "김농부",
-    email: "farmer@example.com",
-    phone: "010-1234-5678",
-    birthDate: "1990-01-01",
-    address: "서울시 강남구 역삼동 123-45",
-    detailAddress: "농산물 아파트 101호",
-    zipCode: "06234",
-    bio: "신선한 농산물을 재배하는 농부입니다.",
-    notifications: {
-      email: true,
-      sms: false,
-      push: true
-    },
-    sellerInfo: {
-      businessNumber: "",
-      farmName: "",
-      farmAddress: "",
-      mainProducts: ""
-    }
-  })
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
+  const [formData, setFormData] = useState<Partial<Member>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }))
-  }
+  // Hardcoded memberId for now, will be replaced by auth context
+  const memberId = 1;
 
-  const handleNotificationChange = (type: string, value: boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      notifications: {
-        ...prev.notifications,
-        [type]: value
+  useEffect(() => {
+    const fetchMemberData = async () => {
+      try {
+        const data = await getMemberById(memberId);
+        setFormData(data);
+        setIsSeller(data.role === "ROLE_SELLER" || data.role === "ROLE_ADMIN");
+      } catch (err) {
+        setError("프로필 정보를 불러오는 데 실패했습니다.");
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-    }))
-  }
+    };
+    fetchMemberData();
+  }, [memberId]);
 
-  const handleSellerInfoChange = (field: string, value: string) => {
-    setFormData(prev => ({
+  const handleInputChange = (field: keyof Member, value: string) => {
+    setFormData((prev) => ({
       ...prev,
-      sellerInfo: {
-        ...prev.sellerInfo,
-        [field]: value
-      }
-    }))
-  }
+      [field]: value,
+    }));
+  };
 
-  const handleSave = () => {
-    toast({
-      title: "프로필이 업데이트되었습니다",
-      description: "변경사항이 성공적으로 저장되었습니다."
-    })
-    setIsEditing(false)
-  }
-
-  const handleSellerRegistration = () => {
-    if (!isSeller) {
-      setIsSeller(true)
+  const handleSave = async () => {
+    try {
+        if (!formData.name || !formData.phoneNum || !formData.address) {
+            toast({ title: "오류", description: "이름, 전화번호, 주소는 필수입니다.", variant: "destructive" });
+            return;
+        }
+      await updateMember(memberId, { 
+          name: formData.name, 
+          phoneNum: formData.phoneNum, 
+          address: formData.address 
+        });
       toast({
-        title: "판매자 등록",
-        description: "판매자 정보를 입력해주세요."
-      })
-    } else {
+        title: "프로필이 업데이트되었습니다",
+        description: "변경사항이 성공적으로 저장되었습니다.",
+      });
+      setIsEditing(false);
+    } catch (error) {
       toast({
-        title: "판매자 정보가 업데이트되었습니다",
-        description: "판매자 등록 정보가 저장되었습니다."
-      })
+        title: "업데이트 실패",
+        description: "프로필 업데이트 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
     }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
   }
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* 프로필 헤더 */}
         <div className="flex items-center justify-between mb-8">
@@ -134,7 +121,7 @@ export default function Profile() {
               <div className="flex items-center space-x-4">
                 <Avatar className="h-20 w-20">
                   <AvatarImage src="/avatars/user.jpg" />
-                  <AvatarFallback className="text-lg">{formData.name[0]}</AvatarFallback>
+                  <AvatarFallback className="text-lg">{formData.name?.[0]}</AvatarFallback>
                 </Avatar>
                 <Button variant="outline" size="sm">
                   <Camera className="w-4 h-4 mr-2" />
@@ -166,7 +153,7 @@ export default function Profile() {
                   <Label htmlFor="name">이름</Label>
                   <Input
                     id="name"
-                    value={formData.name}
+                    value={formData.name || ""}
                     onChange={(e) => handleInputChange("name", e.target.value)}
                     disabled={!isEditing}
                   />
@@ -178,9 +165,8 @@ export default function Profile() {
                     <Input
                       id="email"
                       type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
-                      disabled={!isEditing}
+                      value={formData.email || ""}
+                      disabled // Email is not editable
                     />
                   </div>
                 </div>
@@ -190,34 +176,12 @@ export default function Profile() {
                     <Phone className="w-4 h-4 text-muted-foreground" />
                     <Input
                       id="phone"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      value={formData.phoneNum || ""}
+                      onChange={(e) => handleInputChange("phoneNum", e.target.value)}
                       disabled={!isEditing}
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="birthDate">생년월일</Label>
-                  <Input
-                    id="birthDate"
-                    type="date"
-                    value={formData.birthDate}
-                    onChange={(e) => handleInputChange("birthDate", e.target.value)}
-                    disabled={!isEditing}
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="bio">자기소개</Label>
-                <Textarea
-                  id="bio"
-                  value={formData.bio}
-                  onChange={(e) => handleInputChange("bio", e.target.value)}
-                  disabled={!isEditing}
-                  placeholder="자신을 소개해주세요..."
-                  rows={3}
-                />
               </div>
             </CardContent>
           </Card>
@@ -231,167 +195,15 @@ export default function Profile() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="zipCode">우편번호</Label>
-                  <div className="flex space-x-2">
-                    <Input
-                      id="zipCode"
-                      value={formData.zipCode}
-                      onChange={(e) => handleInputChange("zipCode", e.target.value)}
-                      disabled={!isEditing}
-                    />
-                    <Button variant="outline" size="sm" disabled={!isEditing}>
-                      검색
-                    </Button>
-                  </div>
-                </div>
-              </div>
               <div className="space-y-2">
                 <Label htmlFor="address">주소</Label>
                 <Input
                   id="address"
-                  value={formData.address}
+                  value={formData.address || ""}
                   onChange={(e) => handleInputChange("address", e.target.value)}
                   disabled={!isEditing}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="detailAddress">상세주소</Label>
-                <Input
-                  id="detailAddress"
-                  value={formData.detailAddress}
-                  onChange={(e) => handleInputChange("detailAddress", e.target.value)}
-                  disabled={!isEditing}
-                  placeholder="상세주소를 입력해주세요"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 알림 설정 */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="w-5 h-5" />
-                알림 설정
-              </CardTitle>
-              <CardDescription>
-                받고 싶은 알림 방식을 선택해주세요
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>이메일 알림</Label>
-                  <p className="text-sm text-muted-foreground">주문, 배송 관련 이메일을 받습니다</p>
-                </div>
-                <Switch
-                  checked={formData.notifications.email}
-                  onCheckedChange={(value) => handleNotificationChange("email", value)}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>SMS 알림</Label>
-                  <p className="text-sm text-muted-foreground">배송 알림을 문자로 받습니다</p>
-                </div>
-                <Switch
-                  checked={formData.notifications.sms}
-                  onCheckedChange={(value) => handleNotificationChange("sms", value)}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>푸시 알림</Label>
-                  <p className="text-sm text-muted-foreground">앱 푸시 알림을 받습니다</p>
-                </div>
-                <Switch
-                  checked={formData.notifications.push}
-                  onCheckedChange={(value) => handleNotificationChange("push", value)}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 판매자 등록 */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Store className="w-5 h-5" />
-                판매자 등록
-              </CardTitle>
-              <CardDescription>
-                농산물 판매자로 등록하여 상품을 판매할 수 있습니다
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="space-y-1">
-                  <h4 className="font-medium">판매자 계정</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {isSeller ? "판매자로 등록되어 있습니다" : "일반 회원 계정입니다"}
-                  </p>
-                </div>
-                <Button
-                  variant={isSeller ? "secondary" : "default"}
-                  onClick={() => setIsSeller(!isSeller)}
-                >
-                  {isSeller ? "판매자 해제" : "판매자 등록"}
-                </Button>
-              </div>
-
-              {isSeller && (
-                <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
-                  <h4 className="font-medium flex items-center gap-2">
-                    <Shield className="w-4 h-4" />
-                    판매자 정보
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="businessNumber">사업자등록번호</Label>
-                      <Input
-                        id="businessNumber"
-                        value={formData.sellerInfo.businessNumber}
-                        onChange={(e) => handleSellerInfoChange("businessNumber", e.target.value)}
-                        placeholder="000-00-00000"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="farmName">농장명</Label>
-                      <Input
-                        id="farmName"
-                        value={formData.sellerInfo.farmName}
-                        onChange={(e) => handleSellerInfoChange("farmName", e.target.value)}
-                        placeholder="농장 이름을 입력해주세요"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="farmAddress">농장 주소</Label>
-                    <Input
-                      id="farmAddress"
-                      value={formData.sellerInfo.farmAddress}
-                      onChange={(e) => handleSellerInfoChange("farmAddress", e.target.value)}
-                      placeholder="농장 위치를 입력해주세요"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="mainProducts">주요 취급 상품</Label>
-                    <Textarea
-                      id="mainProducts"
-                      value={formData.sellerInfo.mainProducts}
-                      onChange={(e) => handleSellerInfoChange("mainProducts", e.target.value)}
-                      placeholder="주로 재배하는 농산물을 입력해주세요"
-                      rows={3}
-                    />
-                  </div>
-                  <Button onClick={handleSellerRegistration} className="w-full">
-                    <Save className="w-4 h-4 mr-2" />
-                    판매자 정보 저장
-                  </Button>
-                </div>
-              )}
             </CardContent>
           </Card>
 
@@ -412,5 +224,5 @@ export default function Profile() {
 
       <Footer />
     </div>
-  )
+  );
 }

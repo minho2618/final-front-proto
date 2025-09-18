@@ -1,23 +1,25 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Eye, 
-  EyeOff, 
-  Leaf, 
-  Mail, 
-  Lock, 
+import {
+  Eye,
+  EyeOff,
+  Leaf,
+  Mail,
+  Lock,
   Phone,
   User,
   MapPin,
-  Building
+  Building,
 } from "lucide-react";
 import Header from "@/components/Header";
+import { signUp, createSeller } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,35 +28,72 @@ const Login = () => {
     name: "",
     email: "",
     password: "",
-    phone: "",
-    type: "buyer"
+    phoneNum: "", // Changed from phone to phoneNum to match API
+    address: "Default Address", // Added address field
+    type: "buyer",
   });
   const [farmerData, setFarmerData] = useState({
-    farmName: "",
-    address: "",
-    experience: "",
-    introduction: ""
+    sellerName: "", // Changed from farmName
+    sellerAddress: "", // Changed from address
+    sellerIntro: "", // Changed from introduction
+    // experience is not in SellerReq, so I'm removing it for now
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // 로그인 로직 구현
     console.log("Login:", loginData);
+    toast({
+      title: "로그인",
+      description: "로그인 기능은 현재 개발 중입니다.",
+    });
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 회원가입 로직 구현
-    console.log("Signup:", signupData);
-    if (signupData.type === "seller") {
-      console.log("Farmer data:", farmerData);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { type, ...memberData } = signupData;
+      const newMember = await signUp(memberData);
+
+      if (type === "seller") {
+        const sellerPayload = {
+          memberId: newMember.memberId,
+          ...farmerData,
+          // These fields are in the SellerReq schema but not in the form.
+          // I'll add them with default values.
+          sellerRegNo: "000-00-00000",
+          postalCode: "00000",
+          country: "KOREA",
+          role: "BASIC"
+        };
+        await createSeller(sellerPayload);
+      }
+
+      toast({
+        title: "회원가입 성공",
+        description: "로그인 탭으로 이동하여 로그인해주세요.",
+      });
+      // Optionally switch to login tab
+      // navigate('/login?tab=login'); // This would require a bit more setup to control the tab state
+    } catch (err: any) {
+      setError(err.response?.data?.message || "회원가입에 실패했습니다.");
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-md mx-auto">
           {/* Header */}
@@ -62,7 +101,9 @@ const Login = () => {
             <div className="w-16 h-16 bg-gradient-fresh rounded-full flex items-center justify-center mx-auto mb-4">
               <Leaf className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-2xl font-bold mb-2">신선마켓에 오신 것을 환영합니다</h1>
+            <h1 className="text-2xl font-bold mb-2">
+              신선마켓에 오신 것을 환영합니다
+            </h1>
             <p className="text-muted-foreground">신선한 농산물 직거래 플랫폼</p>
           </div>
 
@@ -86,7 +127,9 @@ const Login = () => {
                         placeholder="example@email.com"
                         className="pl-10"
                         value={loginData.email}
-                        onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+                        onChange={(e) =>
+                          setLoginData({ ...loginData, email: e.target.value })
+                        }
                         required
                       />
                     </div>
@@ -102,7 +145,12 @@ const Login = () => {
                         placeholder="비밀번호를 입력하세요"
                         className="pl-10 pr-10"
                         value={loginData.password}
-                        onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                        onChange={(e) =>
+                          setLoginData({
+                            ...loginData,
+                            password: e.target.value,
+                          })
+                        }
                         required
                       />
                       <Button
@@ -126,12 +174,18 @@ const Login = () => {
                       <input type="checkbox" className="rounded" />
                       <span>로그인 상태 유지</span>
                     </label>
-                    <Link to="/forgot-password" className="text-primary hover:underline">
+                    <Link
+                      to="/forgot-password"
+                      className="text-primary hover:underline"
+                    >
                       비밀번호 찾기
                     </Link>
                   </div>
 
-                  <Button type="submit" className="w-full bg-gradient-fresh hover:shadow-fresh h-12">
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-fresh hover:shadow-fresh h-12"
+                  >
                     로그인
                   </Button>
                 </form>
@@ -142,7 +196,9 @@ const Login = () => {
                       <Separator />
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="bg-background px-2 text-muted-foreground">또는</span>
+                      <span className="bg-background px-2 text-muted-foreground">
+                        또는
+                      </span>
                     </div>
                   </div>
 
@@ -162,14 +218,23 @@ const Login = () => {
             <TabsContent value="signup">
               <Card className="p-6">
                 <form onSubmit={handleSignup} className="space-y-4">
+                  {error && (
+                    <div className="p-3 bg-red-50 rounded-lg">
+                        <p className="text-sm text-red-800">{error}</p>
+                    </div>
+                  )}
                   {/* User Type Selection */}
                   <div className="space-y-2">
                     <Label>가입 유형</Label>
                     <div className="grid grid-cols-2 gap-3">
                       <Button
                         type="button"
-                        variant={signupData.type === "buyer" ? "default" : "outline"}
-                        onClick={() => setSignupData({...signupData, type: "buyer"})}
+                        variant={
+                          signupData.type === "buyer" ? "default" : "outline"
+                        }
+                        onClick={() =>
+                          setSignupData({ ...signupData, type: "buyer" })
+                        }
                         className="h-12"
                       >
                         <User className="w-4 h-4 mr-2" />
@@ -177,8 +242,12 @@ const Login = () => {
                       </Button>
                       <Button
                         type="button"
-                        variant={signupData.type === "seller" ? "default" : "outline"}
-                        onClick={() => setSignupData({...signupData, type: "seller"})}
+                        variant={
+                          signupData.type === "seller" ? "default" : "outline"
+                        }
+                        onClick={() =>
+                          setSignupData({ ...signupData, type: "seller" })
+                        }
                         className="h-12"
                       >
                         <Building className="w-4 h-4 mr-2" />
@@ -197,7 +266,9 @@ const Login = () => {
                         placeholder="이름을 입력하세요"
                         className="pl-10"
                         value={signupData.name}
-                        onChange={(e) => setSignupData({...signupData, name: e.target.value})}
+                        onChange={(e) =>
+                          setSignupData({ ...signupData, name: e.target.value })
+                        }
                         required
                       />
                     </div>
@@ -213,7 +284,12 @@ const Login = () => {
                         placeholder="example@email.com"
                         className="pl-10"
                         value={signupData.email}
-                        onChange={(e) => setSignupData({...signupData, email: e.target.value})}
+                        onChange={(e) =>
+                          setSignupData({
+                            ...signupData,
+                            email: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -229,7 +305,12 @@ const Login = () => {
                         placeholder="8자 이상 입력하세요"
                         className="pl-10"
                         value={signupData.password}
-                        onChange={(e) => setSignupData({...signupData, password: e.target.value})}
+                        onChange={(e) =>
+                          setSignupData({
+                            ...signupData,
+                            password: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -243,8 +324,13 @@ const Login = () => {
                         id="phone"
                         placeholder="010-1234-5678"
                         className="pl-10"
-                        value={signupData.phone}
-                        onChange={(e) => setSignupData({...signupData, phone: e.target.value})}
+                        value={signupData.phoneNum}
+                        onChange={(e) =>
+                          setSignupData({
+                            ...signupData,
+                            phoneNum: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -255,15 +341,22 @@ const Login = () => {
                     <>
                       <Separator className="my-4" />
                       <div className="space-y-4">
-                        <h3 className="font-semibold text-primary">농장 정보</h3>
-                        
+                        <h3 className="font-semibold text-primary">
+                          농장 정보
+                        </h3>
+
                         <div className="space-y-2">
                           <Label htmlFor="farmName">농장명</Label>
                           <Input
                             id="farmName"
                             placeholder="예: 안동 햇살농장"
-                            value={farmerData.farmName}
-                            onChange={(e) => setFarmerData({...farmerData, farmName: e.target.value})}
+                            value={farmerData.sellerName}
+                            onChange={(e) =>
+                              setFarmerData({
+                                ...farmerData,
+                                sellerName: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -276,22 +369,16 @@ const Login = () => {
                               id="address"
                               placeholder="예: 경북 안동시 ○○면"
                               className="pl-10"
-                              value={farmerData.address}
-                              onChange={(e) => setFarmerData({...farmerData, address: e.target.value})}
+                              value={farmerData.sellerAddress}
+                              onChange={(e) =>
+                                setFarmerData({
+                                  ...farmerData,
+                                  sellerAddress: e.target.value,
+                                })
+                              }
                               required
                             />
                           </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="experience">농업 경력</Label>
-                          <Input
-                            id="experience"
-                            placeholder="예: 15년"
-                            value={farmerData.experience}
-                            onChange={(e) => setFarmerData({...farmerData, experience: e.target.value})}
-                            required
-                          />
                         </div>
 
                         <div className="space-y-2">
@@ -300,8 +387,13 @@ const Login = () => {
                             id="introduction"
                             className="w-full min-h-[80px] px-3 py-2 border border-input rounded-md text-sm"
                             placeholder="농장의 특징이나 재배 방식을 간단히 소개해주세요"
-                            value={farmerData.introduction}
-                            onChange={(e) => setFarmerData({...farmerData, introduction: e.target.value})}
+                            value={farmerData.sellerIntro}
+                            onChange={(e) =>
+                              setFarmerData({
+                                ...farmerData,
+                                sellerIntro: e.target.value,
+                              })
+                            }
                           />
                         </div>
                       </div>
@@ -312,21 +404,40 @@ const Login = () => {
                     <label className="flex items-center space-x-2 cursor-pointer text-sm">
                       <input type="checkbox" className="rounded" required />
                       <span>
-                        <Link to="/terms" className="text-primary hover:underline">이용약관</Link> 및{" "}
-                        <Link to="/privacy" className="text-primary hover:underline">개인정보처리방침</Link>에 동의합니다
+                        <Link
+                          to="/terms"
+                          className="text-primary hover:underline"
+                        >
+                          이용약관
+                        </Link>{" "}
+                        및{" "}
+                        <Link
+                          to="/privacy"
+                          className="text-primary hover:underline"
+                        >
+                          개인정보처리방침
+                        </Link>
+                        에 동의합니다
                       </span>
                     </label>
                   </div>
 
-                  <Button type="submit" className="w-full bg-gradient-fresh hover:shadow-fresh h-12">
-                    {signupData.type === "seller" ? "농가 등록 신청" : "회원가입"}
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-fresh hover:shadow-fresh h-12"
+                    disabled={loading}
+                  >
+                    {loading ? "가입 처리 중..." : signupData.type === "seller"
+                      ? "농가 등록 신청"
+                      : "회원가입"}
                   </Button>
                 </form>
 
                 {signupData.type === "seller" && (
                   <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                     <p className="text-sm text-blue-800">
-                      <strong>안내:</strong> 농가 등록 신청 후 관리자 승인까지 1-2일 소요됩니다.
+                      <strong>안내:</strong> 농가 등록 신청 후 관리자 승인까지
+                      1-2일 소요됩니다.
                     </p>
                   </div>
                 )}
@@ -336,7 +447,8 @@ const Login = () => {
 
           <div className="text-center mt-6 text-sm text-muted-foreground">
             <p>
-              신선마켓은 농가와 소비자를 직접 연결하여<br />
+              신선마켓은 농가와 소비자를 직접 연결하여
+              <br />
               더 신선하고 합리적인 농산물 거래를 지원합니다.
             </p>
           </div>

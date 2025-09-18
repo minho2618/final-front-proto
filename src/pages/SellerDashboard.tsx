@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,14 +14,44 @@ import {
   Edit3,
   Trash2,
   Eye,
-  Calendar,
   BarChart3,
-  Settings
 } from "lucide-react";
 import Header from "@/components/Header";
+import { getAllProducts, getAllOrders } from "@/lib/api";
+
+interface Product {
+    productId: number;
+    name: string;
+    price: number;
+    category: string;
+    isActive: boolean;
+    seller: {
+        memberId: number;
+        sellerName: string;
+    }
+}
+
+interface Order {
+    orderId: number;
+    memberRes: {
+        name: string;
+    };
+    status: string;
+    createdAt: string;
+    orderItemList: any[];
+}
 
 const SellerDashboard = () => {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [errorProducts, setErrorProducts] = useState<string | null>(null);
+
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
+  const [errorOrders, setErrorOrders] = useState<string | null>(null);
+
+  // Hardcoded sellerId for now, will be replaced by auth context
+  const sellerId = 1;
   
   // Mock data
   const stats = {
@@ -31,68 +61,53 @@ const SellerDashboard = () => {
     activeProducts: 12
   };
 
-  const recentOrders = [
-    {
-      id: "ORD-001",
-      product: "유기농 토마토 1kg",
-      customer: "김**",
-      amount: 8500,
-      status: "배송중",
-      date: "2024.03.15"
-    },
-    {
-      id: "ORD-002", 
-      product: "신선 상추 300g",
-      customer: "이**",
-      amount: 4500,
-      status: "배송완료",
-      date: "2024.03.15"
-    },
-    {
-      id: "ORD-003",
-      product: "햇 사과 2kg",
-      customer: "박**", 
-      amount: 15000,
-      status: "주문확인",
-      date: "2024.03.14"
-    }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const [productsData, ordersData] = await Promise.all([
+                getAllProducts(),
+                getAllOrders()
+            ]);
 
-  const products = [
-    {
-      id: 1,
-      name: "유기농 토마토 1kg",
-      price: 8500,
-      stock: 50,
-      sales: 156,
-      status: "판매중",
-      image: "/api/placeholder/100/100"
-    },
-    {
-      id: 2,
-      name: "신선 상추 300g", 
-      price: 4500,
-      stock: 30,
-      sales: 89,
-      status: "판매중",
-      image: "/api/placeholder/100/100"
-    },
-    {
-      id: 3,
-      name: "햇 사과 2kg",
-      price: 15000,
-      stock: 0,
-      sales: 234,
-      status: "품절",
-      image: "/api/placeholder/100/100"
-    }
-  ];
+            if (productsData && Array.isArray(productsData.content)) {
+                const sellerProducts = productsData.content.filter((p: Product) => p.seller.memberId === sellerId);
+                setProducts(sellerProducts);
+            } else {
+                setProducts([]);
+            }
+
+            if (ordersData && Array.isArray(ordersData.content)) {
+                const sellerOrders = ordersData.content.filter((o: Order) => 
+                    o.orderItemList.some(item => 
+                        products.some(p => p.productId === item.productId)
+                    )
+                );
+                setOrders(sellerOrders);
+            } else {
+                setOrders([]);
+            }
+        } catch (error) {
+            setErrorProducts("데이터를 불러오는 데 실패했습니다.");
+            setErrorOrders("데이터를 불러오는 데 실패했습니다.");
+        } finally {
+            setLoadingProducts(false);
+            setLoadingOrders(false);
+        }
+    };
+    fetchData();
+  }, [sellerId]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "주문확인": return "bg-blue-100 text-blue-700";
-      case "배송중": return "bg-yellow-100 text-yellow-700";  
-      case "배송완료": return "bg-green-100 text-green-700";
+      case "주문확인":
+      case "PENDING":
+        return "bg-blue-100 text-blue-700";
+      case "배송중":
+      case "READY":
+        return "bg-yellow-100 text-yellow-700";  
+      case "배송완료":
+      case "DONE":
+        return "bg-green-100 text-green-700";
       default: return "bg-gray-100 text-gray-700";
     }
   };
@@ -188,11 +203,15 @@ const SellerDashboard = () => {
                 <h3 className="text-lg font-semibold">최근 주문</h3>
               </div>
               <div className="overflow-x-auto">
+                {loadingOrders ? (
+                    <div className="text-center p-8">주문 목록을 불러오는 중...</div>
+                ) : errorOrders ? (
+                    <div className="text-center p-8 text-red-500">{errorOrders}</div>
+                ) : (
                 <table className="w-full">
                   <thead className="border-b">
                     <tr className="text-left">
                       <th className="p-4 font-medium text-muted-foreground">주문번호</th>
-                      <th className="p-4 font-medium text-muted-foreground">상품</th>
                       <th className="p-4 font-medium text-muted-foreground">고객</th>
                       <th className="p-4 font-medium text-muted-foreground">금액</th>
                       <th className="p-4 font-medium text-muted-foreground">상태</th>
@@ -201,18 +220,17 @@ const SellerDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {recentOrders.map((order) => (
-                      <tr key={order.id} className="border-b">
-                        <td className="p-4 font-medium">{order.id}</td>
-                        <td className="p-4">{order.product}</td>
-                        <td className="p-4">{order.customer}</td>
-                        <td className="p-4 font-medium">{order.amount.toLocaleString()}원</td>
+                    {orders.map((order) => (
+                      <tr key={order.orderId} className="border-b">
+                        <td className="p-4 font-medium">#{order.orderId}</td>
+                        <td className="p-4">{order.memberRes.name}</td>
+                        <td className="p-4 font-medium">{order.orderItemList.reduce((acc, item) => acc + item.totalPrice, 0).toLocaleString()}원</td>
                         <td className="p-4">
                           <Badge className={getStatusColor(order.status)}>
                             {order.status}
                           </Badge>
                         </td>
-                        <td className="p-4 text-muted-foreground">{order.date}</td>
+                        <td className="p-4 text-muted-foreground">{new Date(order.createdAt).toLocaleDateString()}</td>
                         <td className="p-4">
                           <div className="flex space-x-2">
                             <Button size="sm" variant="outline">
@@ -227,6 +245,7 @@ const SellerDashboard = () => {
                     ))}
                   </tbody>
                 </table>
+                )}
               </div>
             </Card>
           </TabsContent>
@@ -242,44 +261,36 @@ const SellerDashboard = () => {
                 </Button>
               </div>
               <div className="overflow-x-auto">
+                {loadingProducts ? (
+                    <div className="text-center p-8">상품 목록을 불러오는 중...</div>
+                ) : errorProducts ? (
+                    <div className="text-center p-8 text-red-500">{errorProducts}</div>
+                ) : (
                 <table className="w-full">
                   <thead className="border-b">
                     <tr className="text-left">
                       <th className="p-4 font-medium text-muted-foreground">상품</th>
                       <th className="p-4 font-medium text-muted-foreground">가격</th>
-                      <th className="p-4 font-medium text-muted-foreground">재고</th>
-                      <th className="p-4 font-medium text-muted-foreground">판매량</th>
                       <th className="p-4 font-medium text-muted-foreground">상태</th>
                       <th className="p-4 font-medium text-muted-foreground">액션</th>
                     </tr>
                   </thead>
                   <tbody>
                     {products.map((product) => (
-                      <tr key={product.id} className="border-b">
+                      <tr key={product.productId} className="border-b">
                         <td className="p-4">
                           <div className="flex items-center space-x-3">
-                            <img 
-                              src={product.image} 
-                              alt={product.name}
-                              className="w-12 h-12 rounded-lg object-cover bg-secondary"
-                            />
                             <span className="font-medium">{product.name}</span>
                           </div>
                         </td>
                         <td className="p-4 font-medium">{product.price.toLocaleString()}원</td>
                         <td className="p-4">
-                          <span className={product.stock === 0 ? 'text-red-600' : ''}>
-                            {product.stock}개
-                          </span>
-                        </td>
-                        <td className="p-4">{product.sales}개</td>
-                        <td className="p-4">
                           <Badge className={
-                            product.status === '판매중' 
+                            product.isActive 
                               ? 'bg-green-100 text-green-700'
                               : 'bg-red-100 text-red-700'
                           }>
-                            {product.status}
+                            {product.isActive ? '판매중' : '품절'}
                           </Badge>
                         </td>
                         <td className="p-4">
@@ -299,6 +310,7 @@ const SellerDashboard = () => {
                     ))}
                   </tbody>
                 </table>
+                )}
               </div>
             </Card>
           </TabsContent>
@@ -323,69 +335,18 @@ const SellerDashboard = () => {
                 </div>
                 <div className="space-y-3">
                   {products.slice(0, 3).map((product, index) => (
-                    <div key={product.id} className="flex items-center justify-between">
+                    <div key={product.productId} className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <span className="w-6 h-6 bg-primary text-primary-foreground rounded-full text-xs font-medium flex items-center justify-center">
                           {index + 1}
                         </span>
                         <span className="text-sm">{product.name}</span>
                       </div>
-                      <span className="text-sm font-medium">{product.sales}개</span>
                     </div>
                   ))}
                 </div>
               </Card>
             </div>
-          </TabsContent>
-
-          {/* Reviews Tab */}
-          <TabsContent value="reviews" className="space-y-6">
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">최근 고객 리뷰</h3>
-              <div className="space-y-4">
-                <div className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-medium">김**</span>
-                      <div className="flex text-accent">★★★★★</div>
-                    </div>
-                    <span className="text-sm text-muted-foreground">2024.03.15</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-2">유기농 토마토 1kg</p>
-                  <p className="text-sm">정말 달고 맛있어요! 토마토 특유의 신맛도 적당하고 아이들도 잘 먹네요.</p>
-                  <Button variant="outline" size="sm" className="mt-2">
-                    답글 달기
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
-
-          {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-6">
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">농장 정보 설정</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">농장명</label>
-                  <Input defaultValue="안동 햇살농장" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">농장 소개</label>
-                  <Textarea 
-                    defaultValue="경북 안동에서 15년간 유기농 농업에 전념하고 있습니다. 농약 없이 건강한 농산물을 재배합니다."
-                    rows={4}
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">연락처</label>
-                  <Input defaultValue="010-1234-5678" />
-                </div>
-                <Button className="bg-gradient-fresh">
-                  저장하기
-                </Button>
-              </div>
-            </Card>
           </TabsContent>
         </Tabs>
       </div>

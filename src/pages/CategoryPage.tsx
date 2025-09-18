@@ -1,81 +1,30 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { ChevronLeft, Filter, Grid, List, SlidersHorizontal } from "lucide-react";
-import tomatoesImage from "@/assets/tomatoes.jpg";
-import leafyGreensImage from "@/assets/leafy-greens.jpg";
-import fruitsImage from "@/assets/seasonal-fruits.jpg";
+import { getProductsByCategory } from "@/lib/api";
+import tomatoesImage from "@/assets/tomatoes.jpg"; // Placeholder
 
-// 카테고리별 상품 데이터
-const categoryProducts = {
-  vegetables: [
-    {
-      id: "v1", name: "유기농 상추", price: 4500, originalPrice: 5500, image: leafyGreensImage,
-      rating: 4.6, reviewCount: 89, farm: "푸른들농장", isOrganic: true, discount: 18
-    },
-    {
-      id: "v2", name: "신선 시금치", price: 3800, image: leafyGreensImage,
-      rating: 4.4, reviewCount: 156, farm: "건강농장", isOrganic: true
-    },
-    {
-      id: "v3", name: "당근 1kg", price: 2900, image: leafyGreensImage,
-      rating: 4.3, reviewCount: 203, farm: "튼튼농장"
-    },
-    {
-      id: "v4", name: "유기농 브로콜리", price: 6800, originalPrice: 8000, image: leafyGreensImage,
-      rating: 4.7, reviewCount: 134, farm: "자연농장", isOrganic: true, discount: 15
-    },
-    {
-      id: "v5", name: "신선 양배추", price: 3200, image: leafyGreensImage,
-      rating: 4.2, reviewCount: 98, farm: "푸른들농장"
-    },
-    {
-      id: "v6", name: "유기농 케일", price: 5600, image: leafyGreensImage,
-      rating: 4.5, reviewCount: 76, farm: "건강농장", isOrganic: true
-    }
-  ],
-  fruits: [
-    {
-      id: "f1", name: "달콤한 딸기 1팩", price: 8900, originalPrice: 10000, image: fruitsImage,
-      rating: 4.8, reviewCount: 245, farm: "달콤농원", discount: 11
-    },
-    {
-      id: "f2", name: "햇사과 5개", price: 12000, image: fruitsImage,
-      rating: 4.6, reviewCount: 189, farm: "산골과수원"
-    },
-    {
-      id: "f3", name: "유기농 배 3개", price: 15600, image: fruitsImage,
-      rating: 4.9, reviewCount: 87, farm: "자연과수원", isOrganic: true
-    },
-    {
-      id: "f4", name: "제철 복숭아", price: 18000, originalPrice: 20000, image: fruitsImage,
-      rating: 4.7, reviewCount: 156, farm: "달콤농원", discount: 10
-    }
-  ],
-  tomatoes: [
-    {
-      id: "t1", name: "유기농 방울토마토", price: 8900, originalPrice: 12000, image: tomatoesImage,
-      rating: 4.8, reviewCount: 234, farm: "청정농장", isOrganic: true, discount: 26
-    },
-    {
-      id: "t2", name: "친환경 토마토 1kg", price: 7200, image: tomatoesImage,
-      rating: 4.7, reviewCount: 298, farm: "자연농장"
-    },
-    {
-      id: "t3", name: "대저토마토 2kg", price: 14500, originalPrice: 16000, image: tomatoesImage,
-      rating: 4.9, reviewCount: 167, farm: "부산농장", discount: 9
-    }
-  ]
-};
+// Based on ProductCardRes
+interface Product {
+  productId: number;
+  name: string;
+  price: number;
+  discountValue: number;
+  category: string;
+  // Add other fields that might be needed for filtering, even if not in ProductCardRes
+  rating?: number;
+  reviewCount?: number;
+  isOrganic?: boolean;
+}
 
 const categoryInfo = {
   vegetables: { name: "신선채소", description: "매일 아침 수확한 신선한 채소들" },
@@ -88,6 +37,10 @@ const categoryInfo = {
 
 const CategoryPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [priceRange, setPriceRange] = useState([0, 50000]);
   const [sortBy, setSortBy] = useState("popular");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -98,15 +51,40 @@ const CategoryPage = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const products = categoryProducts[categoryId as keyof typeof categoryProducts] || [];
   const category = categoryInfo[categoryId as keyof typeof categoryInfo];
+
+  useEffect(() => {
+    if (!categoryId) return;
+
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const data = await getProductsByCategory(categoryId);
+        // Add mock data for fields not in ProductCardRes for filtering/sorting
+        const productsWithMockData = data.map((p: any) => ({ 
+            ...p, 
+            isOrganic: Math.random() > 0.5, 
+            rating: (Math.random() * (5 - 3.5) + 3.5), 
+            reviewCount: Math.floor(Math.random() * 200) 
+        }));
+        setProducts(productsWithMockData);
+      } catch (err) {
+        setError("상품을 불러오는 데 실패했습니다.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [categoryId]);
 
   // 필터링 및 정렬된 상품
   const filteredProducts = useMemo(() => {
     let filtered = products.filter(product => {
       if (filters.organic && !product.isOrganic) return false;
-      if (filters.discount && !product.discount) return false;
-      if (filters.rating > 0 && product.rating < filters.rating) return false;
+      if (filters.discount && product.discountValue <= 0) return false;
+      if (filters.rating > 0 && (product.rating || 0) < filters.rating) return false;
       if (product.price < priceRange[0] || product.price > priceRange[1]) return false;
       return true;
     });
@@ -120,13 +98,13 @@ const CategoryPage = () => {
         filtered.sort((a, b) => b.price - a.price);
         break;
       case "rating":
-        filtered.sort((a, b) => b.rating - a.rating);
+        filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
       case "newest":
-        // 기본 순서
+        // API doesn't provide creation date for ProductCardRes, so we can't sort by newest
         break;
       default: // popular
-        filtered.sort((a, b) => b.reviewCount - a.reviewCount);
+        filtered.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
     }
 
     return filtered;
@@ -347,7 +325,11 @@ const CategoryPage = () => {
             )}
 
             {/* 상품 목록 */}
-            {filteredProducts.length > 0 ? (
+            {loading ? (
+                <div className="text-center py-16">로딩 중...</div>
+            ) : error ? (
+                <div className="text-center py-16 text-red-500">{error}</div>
+            ) : filteredProducts.length > 0 ? (
               <div className={
                 viewMode === "grid" 
                   ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
@@ -355,8 +337,17 @@ const CategoryPage = () => {
               }>
                 {filteredProducts.map((product) => (
                   <ProductCard
-                    key={product.id}
-                    {...product}
+                    key={product.productId}
+                    id={String(product.productId)}
+                    name={product.name}
+                    price={product.price}
+                    originalPrice={product.price + product.discountValue}
+                    image={tomatoesImage} // Placeholder
+                    rating={product.rating} // Placeholder
+                    reviewCount={product.reviewCount} // Placeholder
+                    farm={"농장 정보 없음"} // Placeholder
+                    isOrganic={product.isOrganic} // Placeholder
+                    discount={product.discountValue > 0 ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100) : 0}
                   />
                 ))}
               </div>

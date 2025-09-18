@@ -30,7 +30,7 @@ const FeaturedProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getAllProducts();
+        const data = await getProducts();
         // The API returns a single object with a 'content' array of products.
         // Or it might be a direct array. Let's check the actual response structure.
         // For now, I'll assume data is the array.

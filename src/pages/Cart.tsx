@@ -16,67 +16,42 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
-
-import tomatoesImage from "@/assets/tomatoes.jpg";
-import lettuceImage from "@/assets/lettuce.jpg";
-import applesImage from "@/assets/apples.jpg";
-import { Head } from "react-day-picker";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "경북 안동 유기농 토마토 1kg",
-      image: tomatoesImage,
-      price: 8500,
-      originalPrice: 10000,
-      quantity: 2,
-      farmer: "김농부",
-      location: "경북 안동"
-    },
-    {
-      id: 2,
-      name: "제주도 신선 유기농 상추 300g",
-      image: lettuceImage,
-      price: 4500,
-      quantity: 1,
-      farmer: "이농장",
-      location: "제주도"
-    },
-    {
-      id: 3,
-      name: "충주 햇 사과 2kg (10-12개)",
-      image: applesImage,
-      price: 15000,
-      originalPrice: 18000,
-      quantity: 1,
-      farmer: "박과수원",
-      location: "충북 충주"
-    }
-  ]);
-
+  const { state, removeItem, updateQuantity, checkout } = useCart();
+  const { items: cartItems } = state;
   const [couponCode, setCouponCode] = useState("");
-
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity === 0) {
-      removeItem(id);
-      return;
-    }
-    setCartItems(items => 
-      items.map(item => 
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const removeItem = (id: number) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const shipping = subtotal >= 30000 ? 0 : 3000;
-  const discount = 0; // 쿠폰 할인 적용시
+  const discount = 0; // Coupon discount logic to be implemented
   const total = subtotal + shipping - discount;
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      // Hardcoded memberId and address for now
+      const memberId = 1;
+      const address = "Default Shipping Address";
+      await checkout(memberId, address);
+      toast({
+        title: "주문 완료",
+        description: "주문이 성공적으로 접수되었습니다.",
+      });
+    } catch (error) {
+      toast({
+        title: "주문 실패",
+        description: "주문 처리 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (cartItems.length === 0) {
     return (
@@ -148,7 +123,7 @@ const Cart = () => {
                             {item.name}
                           </Link>
                           <p className="text-sm text-muted-foreground">
-                            {item.farmer} • {item.location}
+                            {item.farm}
                           </p>
                         </div>
                         
@@ -280,33 +255,17 @@ const Cart = () => {
               </div>
               
               <div className="mt-6 space-y-3">
-                <Button className="w-full bg-gradient-fresh hover:shadow-fresh h-12">
-                  <CreditCard className="w-5 h-5 mr-2" />
-                  {total.toLocaleString()}원 결제하기
+                <Button 
+                  className="w-full bg-gradient-fresh hover:shadow-fresh h-12"
+                  onClick={handleCheckout}
+                  disabled={loading}
+                >
+                  {loading ? "주문 처리 중..." : <><CreditCard className="w-5 h-5 mr-2" />{total.toLocaleString()}원 결제하기</>}
                 </Button>
                 
                 <Button variant="outline" className="w-full h-10">
                   선물하기
                 </Button>
-              </div>
-            </Card>
-
-            {/* Benefits */}
-            <Card className="p-6">
-              <h3 className="font-semibold mb-4">혜택 안내</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-start space-x-2">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-                  <span>30,000원 이상 주문시 무료배송</span>
-                </div>
-                <div className="flex items-start space-x-2">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-                  <span>신선도 보장, 당일 수확 상품</span>
-                </div>
-                <div className="flex items-start space-x-2">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
-                  <span>농가 직거래로 합리적인 가격</span>
-                </div>
               </div>
             </Card>
           </div>
