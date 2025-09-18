@@ -29,7 +29,7 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
 
   // Hardcoded memberId for now, will be replaced by auth context
-  const memberId = 1;
+  const memberId = Number(localStorage.getItem("memberId"));
 
   useEffect(() => {
     const fetchMemberData = async () => {
