@@ -29,7 +29,7 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
 
   // Hardcoded memberId for now, will be replaced by auth context
-  const memberId = 1;
+  const memberId = Number(localStorage.getItem("memberId"));
 
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -219,6 +219,19 @@ export default function Profile() {
               </Button>
             </div>
           )}
+          
+          {/* 로그아웃 버튼 */}
+          <div className="flex justify-end">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                localStorage.removeItem('authToken');
+                window.location.href = '/';
+              }}
+            >
+              로그아웃
+            </Button>
+          </div>
         </div>
       </main>
 

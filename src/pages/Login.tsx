@@ -20,10 +20,14 @@ import {
 import Header from "@/components/Header";
 import { signUp, createSeller } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const [loginData, setLoginData] = useState({ 
+    email: "", 
+    password: "" 
+  });
   const [signupData, setSignupData] = useState({
     name: "",
     email: "",
@@ -38,6 +42,12 @@ const Login = () => {
     sellerIntro: "", // Changed from introduction
     // experience is not in SellerReq, so I'm removing it for now
   });
+  const [member, setMember] = useState({
+    address: "",
+    name: "",
+    memberId: 0,
+    username: ""
+  })
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
@@ -45,12 +55,63 @@ const Login = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // 로그인 로직 구현
-    console.log("Login:", loginData);
-    toast({
-      title: "로그인",
-      description: "로그인 기능은 현재 개발 중입니다.",
+    // // Mock login logic - in a real app, this would call an API
+    // if (loginData.email && loginData.password) {
+    //   // Store a mock auth token in localStorage
+    //   localStorage.setItem('authToken', 'mock-auth-token');
+    //   toast({
+    //     title: "로그인 성공",
+    //     description: "프로필 페이지로 이동합니다.",
+    //   });
+    //   // Navigate to profile page after successful login
+    //   setTimeout(() => {
+    //     navigate('/profile');
+    //   }, 1000);
+    // } else {
+    //   toast({
+    //     title: "로그인 실패",
+    //     description: "이메일과 비밀번호를 입력해주세요.",
+    //     variant: "destructive",
+    //   });
+    // }
+    const formData = new FormData() // 폼전송으로 값 전달
+    formData.append('username', loginData.email)
+    formData.append('password', loginData.password)
+
+    axios({
+      method:'post',
+      url:'http://localhost:9000/login',
+      data:formData,
+    })
+    .then((res) => {
+      console.log(res);
+      // 로그인 성공하면 어떤 작업으로 연결해야할까?..LocalStorage에 담는다
+      localStorage.setItem("memberId", res.data.memberId);
+      localStorage.setItem("name", res.data.name);
+      localStorage.setItem("address", res.data.address);
+      localStorage.setItem("username", res.data.username);
+      localStorage.setItem("Authorization", res.headers.authorization)
+
+      // 로그인 인증되었다는 상태를 바꿔준다. Apps.jsx에 있는 isLoggedIn값을 변경
+      // loginedCon.onLoggedChange(true)
+
+      toast({
+        title: "로그인 성공",
+        description: "프로필 페이지로 이동합니다.",
+      });
+      // Navigate to profile page after successful login
+      setTimeout(() => {
+        navigate('/profile');
+      }, 1000);
+    })
+    .catch((err) => {
+        toast({
+        title: "로그인 실패",
+        description: "이메일과 비밀번호를 입력해주세요.",
+        variant: "destructive",
+      });
     });
+
   };
 
   const handleSignup = async (e: React.FormEvent) => {

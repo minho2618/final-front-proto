@@ -4,7 +4,9 @@ const apiClient = axios.create({
   baseURL: 'http://localhost:9000/api',
   headers: {
     'Content-Type': 'application/json',
+    'Authorization': localStorage.getItem('Authorization')
   },
+  
 });
 
 // Add a request interceptor to include the auth token
