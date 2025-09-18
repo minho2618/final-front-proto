@@ -45,12 +45,25 @@ const Login = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // 로그인 로직 구현
-    console.log("Login:", loginData);
-    toast({
-      title: "로그인",
-      description: "로그인 기능은 현재 개발 중입니다.",
-    });
+    // Mock login logic - in a real app, this would call an API
+    if (loginData.email && loginData.password) {
+      // Store a mock auth token in localStorage
+      localStorage.setItem('authToken', 'mock-auth-token');
+      toast({
+        title: "로그인 성공",
+        description: "프로필 페이지로 이동합니다.",
+      });
+      // Navigate to profile page after successful login
+      setTimeout(() => {
+        navigate('/profile');
+      }, 1000);
+    } else {
+      toast({
+        title: "로그인 실패",
+        description: "이메일과 비밀번호를 입력해주세요.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSignup = async (e: React.FormEvent) => {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Menu, ShoppingCart, User, Search } from "lucide-react";
@@ -8,6 +8,16 @@ import { Input } from "@/components/ui/input";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount] = useState(3);
+  const navigate = useNavigate();
+
+  const handleUserClick = () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      navigate('/profile');
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -50,11 +60,14 @@ const Header = () => {
             </Button>
 
             {/* 사용자 버튼 */}
-            <Link to="/profile">
-              <Button variant="ghost" size="icon" className="smooth-transition hover:bg-muted">
-                <User className="w-5 h-5" />
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="smooth-transition hover:bg-muted"
+              onClick={handleUserClick}
+            >
+              <User className="w-5 h-5" />
+            </Button>
 
             {/* 장바구니 버튼 */}
             <Button variant="ghost" size="icon" className="relative smooth-transition hover:bg-muted">

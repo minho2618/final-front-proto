@@ -219,6 +219,19 @@ export default function Profile() {
               </Button>
             </div>
           )}
+          
+          {/* 로그아웃 버튼 */}
+          <div className="flex justify-end">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                localStorage.removeItem('authToken');
+                window.location.href = '/';
+              }}
+            >
+              로그아웃
+            </Button>
+          </div>
         </div>
       </main>
 
