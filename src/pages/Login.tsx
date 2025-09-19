@@ -245,7 +245,9 @@ const Login = () => {
 
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-fresh hover:shadow-fresh h-12"
+                    variant="outline"
+                    className="w-full text-black bg-gradient-fresh 
+                    hover:shadow-fresh hover:text-white h-12"
                   >
                     로그인
                   </Button>
@@ -485,6 +487,7 @@ const Login = () => {
 
                   <Button
                     type="submit"
+                    variant="outline"
                     className="w-full bg-gradient-fresh hover:shadow-fresh h-12"
                     disabled={loading}
                   >

@@ -28,13 +28,6 @@ const categories: Category[] = [
     color: "from-orange-400 to-red-500"
   },
   {
-    id: "tomatoes",
-    name: "토마토",
-    image: tomatoesImage,
-    productCount: 34,
-    color: "from-red-400 to-red-600"
-  },
-  {
     id: "grains",
     name: "곡물·견과",
     image: leafyGreensImage, // 임시로 같은 이미지 사용
@@ -72,7 +65,7 @@ const CategorySection = () => {
         </div>
 
         {/* 카테고리 그리드 */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
           {categories.map((category) => (
             <Link to={`/category/${category.id}`} key={category.id}>
               <Card 

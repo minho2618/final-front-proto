@@ -14,7 +14,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(config => {
     const token = localStorage.getItem('authToken');
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `${token}`;
     }
     return config;
 });
@@ -39,7 +39,7 @@ export const getAllProducts = async (page = 0, size = 20) => {
 //   }
 // }
 
-export const getProductById = async (productId: number) => {
+export const getProductById = async (productId) => {
   try {
     const response = await apiClient.get(`/products/${productId}`);
     return response.data;
@@ -49,7 +49,7 @@ export const getProductById = async (productId: number) => {
   }
 };
 
-export const getProductsByCategory = async (category: string) => {
+export const getProductsByCategory = async (category) => {
   try {
     const response = await apiClient.get(`/products/category/${category}`);
     return response.data;
@@ -60,7 +60,7 @@ export const getProductsByCategory = async (category: string) => {
 };
 
 // Auth APIs
-export const signUp = async (userData: any) => {
+export const signUp = async (userData) => {
   try {
     const response = await apiClient.post('/members', userData);
     return response.data;
@@ -70,7 +70,7 @@ export const signUp = async (userData: any) => {
   }
 };
 
-export const createSeller = async (sellerData: any) => {
+export const createSeller = async (sellerData) => {
     try {
         const response = await apiClient.post('/sellers', sellerData);
         return response.data;
@@ -81,7 +81,7 @@ export const createSeller = async (sellerData: any) => {
 };
 
 // Member APIs
-export const getMemberById = async (memberId: number) => {
+export const getMemberById = async (memberId) => {
     try {
         const response = await apiClient.get(`/members/id/${memberId}`);
         return response.data;
@@ -101,7 +101,7 @@ export const getAllMembers = async (page = 0, size = 20) => {
     }
 };
 
-export const updateMember = async (memberId: number, memberData: any) => {
+export const updateMember = async (memberId, memberData) => {
     try {
         const response = await apiClient.put(`/members/id/${memberId}`, memberData);
         return response.data;
@@ -112,7 +112,7 @@ export const updateMember = async (memberId: number, memberData: any) => {
 };
 
 // Order APIs
-export const createOrder = async (orderData: any) => {
+export const createOrder = async (orderData) => {
     try {
         const response = await apiClient.post('/orders', orderData);
         return response.data;

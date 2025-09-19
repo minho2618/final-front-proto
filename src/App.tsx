@@ -8,6 +8,7 @@ import { AdminLayout } from "@/components/admin-layout";
 import { SellerLayout } from "@/components/SellerLayout";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
 import CategoryPage from "./pages/CategoryPage";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
@@ -56,6 +57,7 @@ const App = () => (
         <Routes>
           {/* User */}
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           {/* Shopping Mall */}
           <Route path="/" element={<Index />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />

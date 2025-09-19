@@ -172,15 +172,15 @@ const CategoryPage = () => {
                 <div className="space-y-4 mb-6">
                   <h4 className="font-medium text-foreground">가격 범위</h4>
                   <Slider
-                    value={priceRange}
-                    onValueChange={setPriceRange}
+                    value={[priceRange[1]]} // 오른쪽 값만 표시
+                    onValueChange={([value]) => setPriceRange([0, value])} // 왼쪽은 0으로 고정
                     max={50000}
                     min={0}
                     step={1000}
                     className="w-full"
                   />
                   <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>{priceRange[0].toLocaleString()}원</span>
+                    <span>0원</span>
                     <span>{priceRange[1].toLocaleString()}원</span>
                   </div>
                 </div>
