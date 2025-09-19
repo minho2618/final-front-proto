@@ -33,6 +33,7 @@ import SystemManagement from "./pages/dashboard/SystemManagement";
 import RecipePage from "./pages/RecipePage";
 import Profile from "./pages/Profile";
 import AuctionPage from "./pages/AuctionPage";
+import AllProducts from "./pages/AllProducts";
 // Seller
 import SellerDashboard from "./pages/seller/Dashboard";
 import AnalyticsProducts from "./pages/seller/AnalyticsProducts";
@@ -61,6 +62,7 @@ const App = () => (
           {/* Shopping Mall */}
           <Route path="/" element={<Index />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
+          <Route path="/products" element={<AllProducts />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/recipe" element={<RecipePage />} />

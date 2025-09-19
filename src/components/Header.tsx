@@ -62,6 +62,7 @@ const Header = () => {
             <Link to="/category/grains" className="text-foreground hover:text-primary smooth-transition">곡물</Link>
             {/* <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition">특산품</Link> */}
             <Link to="/auction" className="text-foreground hover:text-primary smooth-transition">경매</Link>
+            <Link to="/products" className="text-foreground hover:text-primary smooth-transition">전체 상품</Link>
           </nav>
 
           {/* 액션 버튼들 */}
@@ -152,6 +153,7 @@ const Header = () => {
                 <Link to="/category/grains" className="text-foreground hover:text-primary smooth-transition py-2">곡물</Link>
                 {/* <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition py-2">특산품</Link> */}
                 <Link to="/auction" className="text-foreground hover:text-primary smooth-transition py-2">경매</Link>
+                <Link to="/products" className="text-foreground hover:text-primary smooth-transition py-2">전체 상품</Link>
               </nav>
             </div>
           </div>
