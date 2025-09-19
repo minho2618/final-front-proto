@@ -220,7 +220,7 @@ const ProductDetail = () => {
                     <Leaf className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">{product.seller.sellerName}</h3>
+                    {/* <h3 className="font-semibold">{product.seller.sellerName}</h3> */}
                     <p className="text-sm text-muted-foreground">농장 정보</p> 
                   </div>
                 </div>

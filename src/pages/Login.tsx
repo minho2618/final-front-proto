@@ -96,13 +96,13 @@ const Login = () => {
       // loginedCon.onLoggedChange(true)
 
       toast({
-        title: "로그인 성공",
-        description: "프로필 페이지로 이동합니다.",
+        title: "로그인 성공"
       });
       // Navigate to profile page after successful login
-      setTimeout(() => {
-        navigate('/profile');
-      }, 1000);
+      // setTimeout(() => {
+      //   navigate('/profile');
+      // }, 1000);
+      navigate('/');
     })
     .catch((err) => {
         toast({

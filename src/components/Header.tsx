@@ -1,22 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Menu, ShoppingCart, User, Search } from "lucide-react";
+import { Menu, ShoppingCart, User, Search, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount] = useState(3);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // 로그인 상태 확인
+    const token = localStorage.getItem('Authorization');
+    setIsLoggedIn(!!token);
+  }, []);
+
   const handleUserClick = () => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
+    if (isLoggedIn) {
       navigate('/profile');
     } else {
       navigate('/login');
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('Authorization');
+    setIsLoggedIn(false);
+    navigate('/');
   };
 
   return (
@@ -48,7 +60,7 @@ const Header = () => {
             <Link to="/category/vegetables" className="text-foreground hover:text-primary smooth-transition">채소</Link>
             <Link to="/category/fruits" className="text-foreground hover:text-primary smooth-transition">과일</Link>
             <Link to="/category/grains" className="text-foreground hover:text-primary smooth-transition">곡물</Link>
-            <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition">특산품</Link>
+            {/* <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition">특산품</Link> */}
             <Link to="/auction" className="text-foreground hover:text-primary smooth-transition">경매</Link>
           </nav>
 
@@ -59,15 +71,40 @@ const Header = () => {
               <Search className="w-5 h-5" />
             </Button>
 
-            {/* 사용자 버튼 */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="smooth-transition hover:bg-muted"
-              onClick={handleUserClick}
-            >
-              <User className="w-5 h-5" />
-            </Button>
+            {/* 로그인 상태에 따른 버튼 표시 */}
+            {isLoggedIn ? (
+              <>
+                {/* 사용자 버튼 */}
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="smooth-transition hover:bg-muted"
+                  onClick={handleUserClick}
+                >
+                  <User className="w-5 h-5" />
+                </Button>
+                
+                {/* 로그아웃 버튼 */}
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="smooth-transition hover:bg-muted"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-5 h-5" />
+                </Button>
+              </>
+            ) : (
+              /* 로그인 버튼 */
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="smooth-transition"
+                onClick={() => navigate('/login')}
+              >
+                로그인
+              </Button>
+            )}
 
             {/* 장바구니 버튼 */}
             <Button variant="ghost" size="icon" className="relative smooth-transition hover:bg-muted">
@@ -113,7 +150,7 @@ const Header = () => {
                 <Link to="/category/vegetables" className="text-foreground hover:text-primary smooth-transition py-2">채소</Link>
                 <Link to="/category/fruits" className="text-foreground hover:text-primary smooth-transition py-2">과일</Link>
                 <Link to="/category/grains" className="text-foreground hover:text-primary smooth-transition py-2">곡물</Link>
-                <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition py-2">특산품</Link>
+                {/* <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition py-2">특산품</Link> */}
                 <Link to="/auction" className="text-foreground hover:text-primary smooth-transition py-2">경매</Link>
               </nav>
             </div>

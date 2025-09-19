@@ -225,7 +225,7 @@ export default function Profile() {
             <Button 
               variant="outline" 
               onClick={() => {
-                localStorage.removeItem('authToken');
+                localStorage.removeItem('Authorization');
                 window.location.href = '/';
               }}
             >

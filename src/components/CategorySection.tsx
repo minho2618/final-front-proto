@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import tomatoesImage from "@/assets/tomatoes.jpg";
+import grainImage from "@/assets/grain.jpg";
 import leafyGreensImage from "@/assets/leafy-greens.jpg";
 import fruitsImage from "@/assets/seasonal-fruits.jpg";
 
@@ -8,44 +9,38 @@ interface Category {
   id: string;
   name: string;
   image: string;
-  productCount: number;
   color: string;
 }
 
 const categories: Category[] = [
   {
     id: "vegetables",
-    name: "신선채소",
+    name: "채소",
     image: leafyGreensImage,
-    productCount: 156,
     color: "from-green-400 to-green-600"
   },
   {
     id: "fruits",
-    name: "계절과일", 
+    name: "과일", 
     image: fruitsImage,
-    productCount: 89,
     color: "from-orange-400 to-red-500"
   },
   {
     id: "grains",
-    name: "곡물·견과",
-    image: leafyGreensImage, // 임시로 같은 이미지 사용
-    productCount: 67,
+    name: "곡물",
+    image: grainImage,
     color: "from-yellow-400 to-orange-500"
   },
   {
     id: "special",
-    name: "지역특산품",
+    name: "수산물",
     image: fruitsImage, // 임시로 같은 이미지 사용  
-    productCount: 42,
     color: "from-purple-400 to-purple-600"
   },
   {
     id: "herbs",
-    name: "허브·양념",
+    name: "기타",
     image: leafyGreensImage, // 임시로 같은 이미지 사용
-    productCount: 28,
     color: "from-emerald-400 to-emerald-600"
   }
 ];
@@ -84,11 +79,11 @@ const CategorySection = () => {
                   <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-20 group-hover:opacity-30 smooth-transition`}></div>
                   
                   {/* 상품 개수 배지 */}
-                  <div className="absolute top-2 right-2">
+                  {/* <div className="absolute top-2 right-2">
                     <span className="bg-white/90 text-foreground text-xs font-medium px-2 py-1 rounded-full">
                       {category.productCount}개
                     </span>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* 카테고리 정보 */}
