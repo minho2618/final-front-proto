@@ -40,8 +40,10 @@ const Login = () => {
     sellerName: "", // Changed from farmName
     sellerAddress: "", // Changed from address
     sellerIntro: "", // Changed from introduction
+    sellerRegNo: "", // 사업자 등록번호 추가
     // experience is not in SellerReq, so I'm removing it for now
   });
+  const [hasBusinessReg, setHasBusinessReg] = useState(false); // 사업자 등록번호 여부
   const [member, setMember] = useState({
     address: "",
     name: "",
@@ -119,36 +121,69 @@ const Login = () => {
     setLoading(true);
     setError(null);
 
-    try {
-      const { type, ...memberData } = signupData;
-      const newMember = await signUp(memberData);
+    // 새로운 API 형식에 맞는 payload 생성
+    const payload = {
+      memberSignUpInfo: {
+        email: signupData.email,
+        password: signupData.password,
+        name: signupData.name,
+        phoneNum: signupData.phoneNum,
+        address: signupData.address
+      },
+      sellerSignUpInfo: signupData.type === "seller" ? {
+        country: "한국",
+        postalCode: "00000",
+        sellerAddress: farmerData.sellerAddress,
+        sellerIntro: farmerData.sellerIntro,
+        sellerName: farmerData.sellerName,
+        sellerRegNo: farmerData.sellerRegNo || "000-00-00000"
+      } : null
+    };
 
-      if (type === "seller") {
-        const sellerPayload = {
-          memberId: newMember.memberId,
-          ...farmerData,
-          // These fields are in the SellerReq schema but not in the form.
-          // I'll add them with default values.
-          sellerRegNo: "000-00-00000",
-          postalCode: "00000",
-          country: "KOREA",
-          role: "BASIC"
-        };
-        await createSeller(sellerPayload);
-      }
+    // try {
+    //   // JSON 형태로 API 호출
+    //   const response = await fetch("http://localhost:9000/api/members/signup", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify(payload)
+    //   });
 
+    //   if (!response.ok) {
+    //     const errorData = await response.json();
+    //     throw new Error(errorData.message || "회원가입에 실패했습니다.");
+    //   }
+
+    //   toast({
+    //     title: "회원가입 성공",
+    //     description: "로그인 탭으로 이동하여 로그인해주세요.",
+    //   });
+    // } catch (err: any) {
+    //   setError(err.message || "회원가입에 실패했습니다.");
+    //   console.error(err);
+    // } finally {
+    //   setLoading(false);
+    // }
+
+    console.log(payload);
+
+    axios({      
+      method: "post",
+      url: `http://localhost:9000/api/${signupData.type === "seller" ? "sellers" : "members"}`,
+      data: payload
+    })
+    .then((res) => {
       toast({
         title: "회원가입 성공",
         description: "로그인 탭으로 이동하여 로그인해주세요.",
       });
-      // Optionally switch to login tab
-      // navigate('/login?tab=login'); // This would require a bit more setup to control the tab state
-    } catch (err: any) {
-      setError(err.response?.data?.message || "회원가입에 실패했습니다.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+      navigate("/")
+    })
+    .catch((err) => {
+      // const errorData = await response.json();
+      throw new Error(err.message || "회원가입에 실패했습니다.");
+    })
   };
 
   return (
@@ -459,6 +494,48 @@ const Login = () => {
                             }
                           />
                         </div>
+
+                        {/* 사업자 등록번호 여부 체크 */}
+                        <div className="space-y-2">
+                          <label className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              className="rounded"
+                              checked={hasBusinessReg}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setHasBusinessReg(checked);
+                                // 체크 해제 시 사업자 등록번호 초기화
+                                if (!checked) {
+                                  setFarmerData({
+                                    ...farmerData,
+                                    sellerRegNo: "",
+                                  });
+                                }
+                              }}
+                            />
+                            <span>사업자 등록번호가 있습니다</span>
+                          </label>
+                        </div>
+
+                        {/* 사업자 등록번호 입력 필드 */}
+                        {hasBusinessReg && (
+                          <div className="space-y-2">
+                            <Label htmlFor="businessRegNo">사업자 등록번호</Label>
+                            <Input
+                              id="businessRegNo"
+                              placeholder="000-00-00000"
+                              value={farmerData.sellerRegNo}
+                              onChange={(e) =>
+                                setFarmerData({
+                                  ...farmerData,
+                                  sellerRegNo: e.target.value,
+                                })
+                              }
+                              required={hasBusinessReg}
+                            />
+                          </div>
+                        )}
                       </div>
                     </>
                   )}

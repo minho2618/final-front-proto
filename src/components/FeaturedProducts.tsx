@@ -3,6 +3,7 @@ import ProductCard from "./ProductCard";
 import { Button } from "@/components/ui/button";
 import { getAllProducts } from "@/lib/api";
 import tomatoesImage from "@/assets/tomatoes.jpg"; // Placeholder
+import { useNavigate } from 'react-router-dom';
 
 // Define the Product type based on the API response
 interface Product {
@@ -26,6 +27,7 @@ const FeaturedProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigator = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -90,6 +92,7 @@ const FeaturedProducts = () => {
           <Button
             variant="outline"
             className="hidden md:flex border-primary text-primary hover:bg-primary hover:text-primary-foreground smooth-transition"
+            onClick={() => navigator('/products')}
           >
             전체보기
           </Button>
