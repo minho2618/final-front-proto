@@ -96,13 +96,13 @@ const Login = () => {
       // loginedCon.onLoggedChange(true)
 
       toast({
-        title: "로그인 성공",
-        description: "프로필 페이지로 이동합니다.",
+        title: "로그인 성공"
       });
       // Navigate to profile page after successful login
-      setTimeout(() => {
-        navigate('/profile');
-      }, 1000);
+      // setTimeout(() => {
+      //   navigate('/profile');
+      // }, 1000);
+      navigate('/');
     })
     .catch((err) => {
         toast({
@@ -245,7 +245,9 @@ const Login = () => {
 
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-fresh hover:shadow-fresh h-12"
+                    variant="outline"
+                    className="w-full text-black bg-gradient-fresh 
+                    hover:shadow-fresh hover:text-white h-12"
                   >
                     로그인
                   </Button>
@@ -485,6 +487,7 @@ const Login = () => {
 
                   <Button
                     type="submit"
+                    variant="outline"
                     className="w-full bg-gradient-fresh hover:shadow-fresh h-12"
                     disabled={loading}
                   >

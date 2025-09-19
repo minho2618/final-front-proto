@@ -107,7 +107,7 @@ const FeaturedProducts = () => {
               image={tomatoesImage} // Using placeholder
               rating={4.5} // Placeholder
               reviewCount={0} // Placeholder
-              farm={product.seller.sellerName}
+              //farm={product.seller.sellerName}
               isOrganic={false} // Placeholder
               discount={product.discountValue > 0 ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100) : 0}
             />
