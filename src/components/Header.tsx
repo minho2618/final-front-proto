@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Menu, ShoppingCart, User, Search, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import logo from "@/assets/Logo.png"
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,10 +38,15 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* 로고 */}
           <Link to="/" className="flex items-center space-x-2">
+          <img src={logo} alt="산지직송 로고" className="h-10 w-auto" loading="eager"/>
+
+{/*
             <div className="w-8 h-8 gradient-primary rounded-full flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">팜</span>
             </div>
-            <h1 className="text-xl font-bold text-foreground">팜투테이블</h1>
+            <h1 className="text-xl font-bold text-foreground">산지직송</h1>
+            */}
+
           </Link>
 
           {/* 검색바 - 데스크톱 */}
@@ -62,6 +68,8 @@ const Header = () => {
             <Link to="/category/grains" className="text-foreground hover:text-primary smooth-transition">곡물</Link>
             {/* <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition">특산품</Link> */}
             <Link to="/auction" className="text-foreground hover:text-primary smooth-transition">경매</Link>
+            <Link to="/products" className="text-foreground hover:text-primary smooth-transition">전체 상품</Link>
+            <Link to="/seller/dashboard" className="text-foreground hover:text-primary smooth-transition">상품 등록</Link>
           </nav>
 
           {/* 액션 버튼들 */}
@@ -152,6 +160,7 @@ const Header = () => {
                 <Link to="/category/grains" className="text-foreground hover:text-primary smooth-transition py-2">곡물</Link>
                 {/* <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition py-2">특산품</Link> */}
                 <Link to="/auction" className="text-foreground hover:text-primary smooth-transition py-2">경매</Link>
+                <Link to="/products" className="text-foreground hover:text-primary smooth-transition py-2">전체 상품</Link>
               </nav>
             </div>
           </div>

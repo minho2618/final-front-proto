@@ -94,7 +94,7 @@ const ProductCard = ({
           <Button
             variant="ghost"
             size="icon"
-            className={`absolute top-2 right-12 w-8 h-8 rounded-full bg-white/80 hover:bg-white smooth-transition ${
+            className={`absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 hover:bg-white smooth-transition ${
               isLiked ? "text-red-500" : "text-muted-foreground"
             }`}
             onClick={(e) => {
