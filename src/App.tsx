@@ -68,7 +68,9 @@ const App = () => (
           <Route path="/recipe" element={<RecipePage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/auction" element={<AuctionPage />} />
+          
           {/* DashBoard */}
+          <Route path="dashboard" element={<AdminLayout><Monitoring /></AdminLayout>} />
           <Route path="dashboard/dashboard" element={<AdminLayout><Monitoring /></AdminLayout>} />
           <Route path="dashboard/monitoring" element={<AdminLayout><Monitoring /></AdminLayout>} />
           <Route path="dashboard/members" element={<AdminLayout><Members /></AdminLayout>} />
@@ -98,6 +100,18 @@ const App = () => (
           <Route path="seller/product/pricing" element={<SellerLayout><ProductPricing /></SellerLayout>} />
           <Route path="seller/product/register" element={<SellerLayout><ProductRegister /></SellerLayout>} />
           <Route path="seller/product/edit/:id" element={<SellerLayout><ProductEdit /></SellerLayout>} />
+
+          {/* admin~ */}
+          <Route path="admin/products/register" element={<SellerLayout><ProductRegister /></SellerLayout>} />
+          <Route path="admin/products/pricing" element={<SellerLayout><ProductPricing /></SellerLayout>} />
+          <Route path="admin/products/inventory" element={<SellerLayout><ProductInventory /></SellerLayout>} />
+          <Route path="admin/orders/notifications" element={<SellerLayout><OrderNotifications /></SellerLayout>} />
+          <Route path="admin/orders/delivery" element={<SellerLayout><OrderDelivery /></SellerLayout>} />
+          <Route path="admin/analytics/settlement" element={<SellerLayout><AnalyticsSettlement /></SellerLayout>} />
+          <Route path="admin/analytics/sales" element={<SellerLayout><AnalyticsSales /></SellerLayout>} />
+          <Route path="admin/analytics/products" element={<SellerLayout><AnalyticsProducts /></SellerLayout>} />
+
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
