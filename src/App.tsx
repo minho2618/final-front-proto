@@ -44,6 +44,7 @@ import ProductInventory from "./pages/seller/ProductInventory";
 import ProductPricing from "./pages/seller/ProductPricing";
 import ProductRegister from "./pages/seller/ProductRegister";
 import ProductEdit from "./pages/seller/ProductEdit";
+import SocialLoginCallbackHandler from "./pages/SocialLoginCallbackHandler";
 import WhatToEat from "./pages/WhatToEat";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => (
           {/* User */}
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/social/callback" element={<SocialLoginCallbackHandler />} />
           {/* Shopping Mall */}
           <Route path="/" element={<Index />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
