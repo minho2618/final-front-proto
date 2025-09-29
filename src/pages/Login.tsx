@@ -22,6 +22,10 @@ import { signUp, createSeller } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 
+const BACKEND_URL = 'http://localhost:9000'; 
+const NAVER_LOGIN_URL = `${BACKEND_URL}/oauth2/authorization/naver`;
+const GOOGLE_LOGIN_URL = `${BACKEND_URL}/oauth2/authorization/google`;
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState({ 
@@ -140,6 +144,7 @@ const Login = () => {
       } : null
     };
 
+
     // try {
     //   // JSON 형태로 API 호출
     //   const response = await fetch("http://localhost:9000/api/members/signup", {
@@ -185,7 +190,12 @@ const Login = () => {
       throw new Error(err.message || "회원가입에 실패했습니다.");
     })
   };
-
+  const handleNaverLogin = () => {
+        window.location.href = NAVER_LOGIN_URL;
+    };
+  const handleGoogleLogin = () => {
+    window.location.href = GOOGLE_LOGIN_URL;
+};
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -301,11 +311,13 @@ const Login = () => {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 mt-6">
-                    <Button variant="outline" className="w-full">
+                    <Button variant="outline" className="w-full" 
+                    onClick={handleNaverLogin}>
                       네이버 로그인
                     </Button>
-                    <Button variant="outline" className="w-full">
-                      카카오 로그인
+                    <Button variant="outline" className="w-full"
+                    onClick={handleGoogleLogin}>
+                      구글 로그인
                     </Button>
                   </div>
                 </div>
