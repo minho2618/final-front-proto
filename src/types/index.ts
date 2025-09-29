@@ -1,7 +1,7 @@
 export interface Product {
   id: string;
   title: string;
-  category: "veggies" | "fruits" | "grains" | "mushrooms" | "beans" | "nuts";
+  category: "VEGETABLE" | "FRUIT" | "GRAIN" | "SEAFOOD" | "ETC" ;
   price: number;
   unit: string;
   stock: number;
