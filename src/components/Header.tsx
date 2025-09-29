@@ -69,7 +69,9 @@ const Header = () => {
             {/* <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition">특산품</Link> */}
             <Link to="/auction" className="text-foreground hover:text-primary smooth-transition">경매</Link>
             <Link to="/products" className="text-foreground hover:text-primary smooth-transition">전체 상품</Link>
+            <Link to="/what-to-eat" className="text-foreground hover:text-primary smooth-transition">오늘 뭐 먹지?</Link>
             <Link to="/seller/dashboard" className="text-foreground hover:text-primary smooth-transition">상품 등록</Link>
+            
           </nav>
 
           {/* 액션 버튼들 */}

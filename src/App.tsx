@@ -30,7 +30,6 @@ import Announcements from "./pages/dashboard/Announcements";
 import Analytics from "./pages/dashboard/Analytics";
 import Performance from "./pages/dashboard/Performance";
 import SystemManagement from "./pages/dashboard/SystemManagement";
-import RecipePage from "./pages/RecipePage";
 import Profile from "./pages/Profile";
 import AuctionPage from "./pages/AuctionPage";
 import AllProducts from "./pages/AllProducts";
@@ -45,6 +44,8 @@ import ProductInventory from "./pages/seller/ProductInventory";
 import ProductPricing from "./pages/seller/ProductPricing";
 import ProductRegister from "./pages/seller/ProductRegister";
 import ProductEdit from "./pages/seller/ProductEdit";
+import SocialLoginCallbackHandler from "./pages/SocialLoginCallbackHandler";
+import WhatToEat from "./pages/WhatToEat";
 
 const queryClient = new QueryClient();
 
@@ -59,16 +60,17 @@ const App = () => (
           {/* User */}
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/auth/social/callback" element={<SocialLoginCallbackHandler />} />
           {/* Shopping Mall */}
           <Route path="/" element={<Index />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
           <Route path="/products" element={<AllProducts />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/recipe" element={<RecipePage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/auction" element={<AuctionPage />} />
-          
+          <Route path="/what-to-eat" element={<WhatToEat />} />
+
           {/* DashBoard */}
           <Route path="dashboard" element={<AdminLayout><Monitoring /></AdminLayout>} />
           <Route path="dashboard/dashboard" element={<AdminLayout><Monitoring /></AdminLayout>} />
