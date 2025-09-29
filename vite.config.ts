@@ -8,6 +8,14 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      "/api": {
+        target: "http://localhost:9000",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+
   },
   plugins: [
     react(),
@@ -20,3 +28,19 @@ export default defineConfig(({ mode }) => ({
     },
   },
 }));
+/*
+export default defineConfig({
+  plugins: [react()],
+  resolve: { alias: { "@": path.resolve(__dirname, "src") } },
+  server: {
+    port: 5173,
+    proxy: {
+      "/api": {
+        target: "http://localhost:9000",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
+});
+*/
