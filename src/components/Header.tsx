@@ -63,9 +63,9 @@ const Header = () => {
           {/* 네비게이션 - 데스크톱 */}
           <nav className="hidden md:flex items-center space-x-6">
             <Link to="/" className="text-foreground hover:text-primary smooth-transition">홈</Link>
-            <Link to="/category/vegetables" className="text-foreground hover:text-primary smooth-transition">채소</Link>
-            <Link to="/category/fruits" className="text-foreground hover:text-primary smooth-transition">과일</Link>
-            <Link to="/category/grains" className="text-foreground hover:text-primary smooth-transition">곡물</Link>
+            <Link to="/category/VEGETABLE" className="text-foreground hover:text-primary smooth-transition">채소</Link>
+            <Link to="/category/FRUIT" className="text-foreground hover:text-primary smooth-transition">과일</Link>
+            <Link to="/category/GRAIN" className="text-foreground hover:text-primary smooth-transition">곡물</Link>
             {/* <Link to="/category/special" className="text-foreground hover:text-primary smooth-transition">특산품</Link> */}
             <Link to="/auction" className="text-foreground hover:text-primary smooth-transition">경매</Link>
             <Link to="/products" className="text-foreground hover:text-primary smooth-transition">전체 상품</Link>

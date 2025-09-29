@@ -134,10 +134,11 @@ export default function ProductRegister() {
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         <option value="">카테고리를 선택하세요</option>
-                        <option value="vegetables">채소류</option>
-                        <option value="fruits">과일류</option>
-                        <option value="grains">곡물류</option>
-                        <option value="herbs">허브류</option>
+                        <option value="VEGETABLE">채소류</option>
+                        <option value="FRUIT">과일류</option>
+                        <option value="GRAIN">곡물류</option>
+                        <option value="SEAFOOD">수산물</option>
+                        <option value="ETC">기타</option>
                       </select>
                     </FormControl>
                     <FormMessage />
