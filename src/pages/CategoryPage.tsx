@@ -27,12 +27,11 @@ interface Product {
 }
 
 const categoryInfo = {
-  vegetables: { name: "신선채소", description: "매일 아침 수확한 신선한 채소들" },
-  fruits: { name: "계절과일", description: "달콤하고 신선한 제철 과일" },
-  tomatoes: { name: "토마토", description: "빨갛게 익은 신선한 토마토" },
-  grains: { name: "곡물·견과", description: "건강한 곡물과 견과류" },
-  special: { name: "지역특산품", description: "전국 각지의 특산품" },
-  herbs: { name: "허브·양념", description: "요리에 필요한 신선한 허브와 양념" }
+  VEGETABLE: { name: "신선채소", description: "매일 아침 수확한 신선한 채소들" },
+  FRUIT: { name: "계절과일", description: "달콤하고 신선한 제철 과일" },
+  SEAFOOD: { name: "신선한 수산물", description: "수산물" },
+  GRAIN: { name: "곡물·견과", description: "건강한 곡물과 견과류" },
+  ETC: { name: "기타", description: "여러가지 기타" }
 };
 
 const CategoryPage = () => {
