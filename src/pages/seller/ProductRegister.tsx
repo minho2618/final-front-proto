@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
+import axios from "axios";
 
 const productSchema = z.object({
   name: z.string().min(1, "상품명을 입력해주세요"),
@@ -18,12 +19,16 @@ const productSchema = z.object({
   category: z.string().min(1, "카테고리를 선택해주세요"),
 });
 
+
+
 type ProductFormData = z.infer<typeof productSchema>;
 
 export default function ProductRegister() {
   const { toast } = useToast();
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
+
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -50,26 +55,85 @@ export default function ProductRegister() {
     });
   };
 
+
+  
   const removeImage = (index: number) => {
     setImageFiles(prev => prev.filter((_, i) => i !== index));
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
-  const onSubmit = (data: ProductFormData) => {
-    console.log("Product data:", data);
-    console.log("Images:", imageFiles);
+  const onSubmit = async (data: ProductFormData) => {
+    const token = localStorage.getItem('Authorization'); // 실제 토큰 저장소에 맞게 수정 필요
+
+    if (!token) {
+        toast({ title: "인증 오류", description: "로그인 토큰이 없어 상품 등록을 진행할 수 없습니다.", variant: "destructive" });
+        return;
+    }
+
+    // 1. 상품 정보 (JSON) 전송 ----------------------------------------
+    const productReqData = {
+        name: data.name,
+        description: data.description,
+        price: Number(data.price), 
+        category: data.category, 
+        discountValue: 0,
+        isActive: true,
+    };
     
+    let productId;
+    try {
+        // ... /api/products JSON POST 요청 (변경 없음)
+        const response = await axios.post('/api/products', productReqData, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `${token}`
+              }
+        });
+        productId = response.data.productId; 
+
+    } catch (error) {
+        console.error("상품 정보 등록 Axios 에러:", error.response?.data || error.message);
+        toast({ title: "상품 등록 실패", description: "상품 정보 전송에 실패했습니다.", variant: "destructive" });
+        return; 
+    }
+
+    // 2. 이미지 파일 등록 (파일을 상품 이미지 API로 직접 전송) -----------
+    if (imageFiles.length > 0) {
+        const formData = new FormData();
+        imageFiles.forEach((file) => {
+            // 백엔드 @RequestPart("files")에 맞추어 필드명을 'files'로 사용
+            formData.append('files', file); 
+        });
+        
+        try {
+            const imageApiUrl = `/api/products/${productId}/images`;
+            
+            await axios.post(imageApiUrl, formData, {
+                // Axios가 FormData 처리 시 자동으로 Content-Type: multipart/form-data 설정
+            });
+
+        } catch (error) {
+            console.error("이미지 파일 전송 Axios 에러:", error.response?.data || error.message);
+            // 파일 업로드 실패 시 경고
+            toast({
+                title: "경고: 이미지 처리 실패",
+                description: "상품 정보는 등록되었으나, 이미지 파일 전송에 실패했습니다.",
+            });
+        }
+    }
+
+    // 최종 성공 처리 --------------------------------------------------
     toast({
-      title: "상품 등록 완료",
-      description: `${data.name} 상품이 성공적으로 등록되었습니다.`,
-      variant: "default",
+        title: "상품 등록 완료 🎉",
+        description: `${productReqData.name} 상품 등록이 완료되었습니다.`,
+        variant: "default",
     });
 
-    // Reset form and images
+    // 폼 초기화
     form.reset();
     setImageFiles([]);
     setImagePreviews([]);
-  };
+};
 
   return (
     <div className="space-y-6">
