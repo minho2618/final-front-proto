@@ -30,7 +30,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAuthenticatedSeller, setIsAuthenticatedSeller] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
   const navigate = useNavigate();
 
   // 로그인/권한 상태 초기화 & 스토리지 동기화
@@ -38,7 +38,7 @@ const Header = () => {
     const update = () => {
       const hasToken = !!localStorage.getItem("Authorization");
       setIsLoggedIn(hasToken);
-      setIsAuthenticatedSeller(readRoleFromToken() === "AUTHENTICATED");
+      setIsSeller(readRoleFromToken() === "ROLE_SELLER");
     };
     update();
 
@@ -53,10 +53,20 @@ const Header = () => {
     navigate(isLoggedIn ? "/profile" : "/login");
   };
 
+const handleCartClick = () => {
+  if (!isLoggedIn) {
+    navigate("/login", { state: { from: "/cart" } });
+  } else {
+    navigate("/cart");
+  }
+};
+
+
+
   const handleLogout = () => {
     localStorage.removeItem("Authorization");
     setIsLoggedIn(false);
-    setIsAuthenticatedSeller(false);
+    setIsSeller(false);
     navigate("/");
   };
 
@@ -91,8 +101,8 @@ const Header = () => {
             <Link to="/products" className="text-foreground hover:text-primary smooth-transition">전체 상품</Link>
             <Link to="/what-to-eat" className="text-foreground hover:text-primary smooth-transition">오늘 뭐 먹지?</Link>
 
-            {/* ✅ AUTHENTICATED 일 때만 보이게 */}
-            {isLoggedIn && isAuthenticatedSeller && (
+            {/* isSeller 일 때만 보이게 */}
+            {isLoggedIn && isSeller && (
               <Link to="/seller/dashboard" className="text-foreground hover:text-primary smooth-transition">
                 상품 등록
               </Link>
@@ -138,18 +148,27 @@ const Header = () => {
             )}
 
             {/* 장바구니 */}
-            <Button variant="ghost" size="icon" className="relative smooth-transition hover:bg-muted">
+            {isLoggedIn && ( 
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="relative smooth-transition hover:bg-muted"  
+              onClick={handleCartClick}
+              aria-label="장바구니로 이동"
+            >
               <ShoppingCart className="w-5 h-5" />
+              
               {cartCount > 0 && (
                 <Badge
                   variant="secondary"
                   className="absolute -top-2 -right-2 w-5 h-5 rounded-full p-0 flex items-center justify-center text-xs bg-secondary text-secondary-foreground"
                 >
+                  
                   {cartCount}
                 </Badge>
               )}
             </Button>
-
+            )}
             {/* 모바일 메뉴 버튼 */}
             <Button
               variant="ghost"
@@ -184,7 +203,7 @@ const Header = () => {
                 <Link to="/products" className="text-foreground hover:text-primary smooth-transition py-2">전체 상품</Link>
 
                 {/* ✅ 모바일에서도 조건부로 */}
-                {isLoggedIn && isAuthenticatedSeller && (
+                {isLoggedIn && isSeller && (
                   <Link to="/seller/dashboard" className="text-foreground hover:text-primary smooth-transition py-2">
                     상품 등록
                   </Link>

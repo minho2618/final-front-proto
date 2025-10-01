@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarTrigger, useSidebar,
+  Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, useSidebar,
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -51,7 +51,6 @@ export function SellerSidebar() {
   return (
     <Sidebar className="border-r" collapsible="icon">
       <div className="p-4 border-b">
-        <SidebarTrigger className="mb-4" />
         {!isCollapsed && (
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
