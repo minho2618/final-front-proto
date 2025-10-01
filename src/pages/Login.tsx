@@ -173,22 +173,74 @@ const Login = () => {
 
     console.log(payload);
 
-    axios({      
-      method: "post",
-      url: `http://localhost:9000/api/${signupData.type === "seller" ? "sellers" : "members"}`,
-      data: payload
-    })
-    .then((res) => {
+    axios({
+  method: "post",
+  url: `http://localhost:9000/api/${signupData.type === "seller" ? "sellers" : "members"}`,
+  data: payload,
+})
+.then(() => {
+  toast({
+    title: "회원가입 성공",
+    description: "로그인 탭으로 이동하여 로그인해주세요.",
+  });
+  navigate("/");
+})
+.catch((err) => {
+  // ✅ 재-throw 하지 말 것!
+  if (axios.isAxiosError(err)) {
+    const status = err.response?.status;
+    // 서버가 보낸 메시지 후보들 안전하게 파싱
+    const serverMsg =
+      (err.response?.data && (err.response.data.message || err.response.data.error || err.response.data.detail)) ||
+      undefined;
+
+    if (status === 417) {
       toast({
-        title: "회원가입 성공",
-        description: "로그인 탭으로 이동하여 로그인해주세요.",
+        title: "이미 가입된 회원입니다",
+        description: "로그인으로 이동해 주세요.",
+        variant: "destructive",
       });
-      navigate("/")
-    })
-    .catch((err) => {
-      // const errorData = await response.json();
-      throw new Error(err.message || "회원가입에 실패했습니다.");
-    })
+    } else if (status === 409) {
+      // 혹시 백엔드가 409를 쓰도록 바뀌었다면
+      toast({
+        title: "중복 계정",
+        description: serverMsg || "이미 존재하는 이메일입니다.",
+        variant: "destructive",
+      });
+    } else if (status) {
+      toast({
+        title: `회원가입 실패 (${status})`,
+        description: serverMsg || "잠시 후 다시 시도해 주세요.",
+        variant: "destructive",
+      });
+    } else {
+      // 네트워크/타임아웃 등
+      toast({
+        title: "네트워크 오류",
+        description: "서버에 연결할 수 없습니다.",
+        variant: "destructive",
+      });
+    }
+  } else {
+    // axios 외의 예외
+    toast({
+      title: "알 수 없는 오류",
+      description: (err as Error)?.message ?? "다시 시도해 주세요.",
+      variant: "destructive",
+    });
+  }
+
+  // 필요하면 에러 상태에도 복사
+  setError(
+    axios.isAxiosError(err)
+      ? (err.response?.data?.message || err.message || "회원가입에 실패했습니다.")
+      : (err as Error)?.message || "회원가입에 실패했습니다."
+  );
+})
+.finally(() => {
+  setLoading(false);
+});
+
   };
   const handleNaverLogin = () => {
         window.location.href = NAVER_LOGIN_URL;
@@ -328,11 +380,6 @@ const Login = () => {
             <TabsContent value="signup">
               <Card className="p-6">
                 <form onSubmit={handleSignup} className="space-y-4">
-                  {error && (
-                    <div className="p-3 bg-red-50 rounded-lg">
-                        <p className="text-sm text-red-800">{error}</p>
-                    </div>
-                  )}
                   {/* User Type Selection */}
                   <div className="space-y-2">
                     <Label>가입 유형</Label>
