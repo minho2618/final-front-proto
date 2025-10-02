@@ -33,7 +33,7 @@ const AllProducts = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [priceRange, setPriceRange] = useState([0, 50000]);
+  const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [sortBy, setSortBy] = useState("popular");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filters, setFilters] = useState({
@@ -350,7 +350,7 @@ const AllProducts = () => {
                   variant="outline"
                   onClick={() => {
                     setFilters({ organic: false, discount: false, rating: 0 });
-                    setPriceRange([0, 50000]);
+                    setPriceRange([0, 1000000]);
                   }}
                 >
                   필터 초기화

@@ -43,7 +43,7 @@ const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [priceRange, setPriceRange] = useState([0, 50000]);
+  const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [sortBy, setSortBy] = useState("popular");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filters, setFilters] = useState({
@@ -67,7 +67,8 @@ const CategoryPage = () => {
             ...p, 
             isOrganic: Math.random() > 0.5, 
             rating: (Math.random() * (5 - 3.5) + 3.5), 
-            reviewCount: Math.floor(Math.random() * 200) 
+            reviewCount: Math.floor(Math.random() * 200),
+            imageUrl: p.imageUrl || "/assets/grain-Dr2KU0m4.jpg",
         }));
         setProducts(productsWithMockData);
       } catch (err) {
@@ -176,7 +177,7 @@ const CategoryPage = () => {
                   <Slider
                     value={[priceRange[1]]} // 오른쪽 값만 표시
                     onValueChange={([value]) => setPriceRange([0, value])} // 왼쪽은 0으로 고정
-                    max={50000}
+                    max={1000000}
                     min={0}
                     step={1000}
                     className="w-full"

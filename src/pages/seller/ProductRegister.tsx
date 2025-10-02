@@ -105,10 +105,15 @@ export default function ProductRegister() {
         });
         
         try {
-            const imageApiUrl = `/api/products/${productId}/images`;
+            // const imageApiUrl = `/api/products/${productId}/images`;
+            // await axios.post(imageApiUrl, formData, {
+            // });
+            const imageApiUrl = `/api/products/images/upload`;
             await axios.post(imageApiUrl, formData, {
+              params : {
+                'groupId' : productId
+              }
             });
-
         } catch (error) {
             console.error("이미지 파일 전송 Axios 에러:", error.response?.data || error.message);
             toast({
