@@ -256,7 +256,7 @@ const Cart = () => {
               
               <div className="mt-6 space-y-3">
                 <Button 
-                  className="w-full bg-gradient-fresh hover:shadow-fresh h-12"
+                  className="w-full bg-gradient-fresh shadow-fresh h-12"
                   onClick={handleCheckout}
                   disabled={loading}
                 >
