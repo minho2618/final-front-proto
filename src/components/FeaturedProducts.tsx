@@ -4,24 +4,10 @@ import { Button } from "@/components/ui/button";
 import { getAllProducts } from "@/lib/api";
 import tomatoesImage from "@/assets/tomatoes.jpg"; // Placeholder
 import { useNavigate } from 'react-router-dom';
+import { Product } from '@/api/axios';
 
 // Define the Product type based on the API response
-interface Product {
-  productId: number;
-  name: string;
-  price: number;
-  description: string;
-  category: string;
-  discountValue: number;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  seller: {
-    memberId: number;
-    sellerName: string;
-    sellerIntro: string;
-  };
-}
+
 
 const FeaturedProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -112,7 +98,6 @@ const FeaturedProducts = () => {
               reviewCount={0} // Placeholder
               //farm={product.seller.sellerName}
               isOrganic={false} // Placeholder
-              discount={product.discountValue > 0 ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100) : 0}
             />
           ))}
         </div>
