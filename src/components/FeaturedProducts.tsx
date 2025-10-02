@@ -98,6 +98,12 @@ const FeaturedProducts = () => {
               reviewCount={0} // Placeholder
               //farm={product.seller.sellerName}
               isOrganic={false} // Placeholder
+                // ⬇️ 0이면 undefined로 넘겨서 "0" 텍스트 렌더링 방지
+              discount={
+                product.discountValue > 0
+                  ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100)
+                  : undefined
+              }
             />
           ))}
         </div>

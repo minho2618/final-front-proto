@@ -105,6 +105,9 @@ export default function ProductRegister() {
         });
         
         try {
+            // const imageApiUrl = `/api/products/${productId}/images`;
+            // await axios.post(imageApiUrl, formData, {
+            // });
             const imageApiUrl = `/api/products/images/upload`;
             await axios.post(imageApiUrl, formData, {
               params : {
