@@ -12,6 +12,8 @@ import { Slider } from "@/components/ui/slider";
 import { ChevronLeft, Filter, Grid, List, SlidersHorizontal } from "lucide-react";
 import { getAllProducts } from "@/lib/api";
 import tomatoesImage from "@/assets/tomatoes.jpg";
+import noImage from "@/assets/no-image.png";
+
 
 interface Product {
   productId: number;
@@ -19,6 +21,8 @@ interface Product {
   price: number;
   discountValue: number;
   category: string;
+  farmName?: string;           // ⬅️ 추가
+  imageUrl?: string;          // ✅ 추가
   rating?: number;
   reviewCount?: number;
   isOrganic?: boolean;
@@ -306,21 +310,36 @@ const AllProducts = () => {
                   ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
                   : "space-y-4"
               }>
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.productId}
-                    id={String(product.productId)}
-                    name={product.name}
-                    price={product.price}
-                    originalPrice={product.price + product.discountValue}
-                    image={tomatoesImage}
-                    rating={product.rating}
-                    reviewCount={product.reviewCount}
-                    farm={"농장 정보 없음"}
-                    isOrganic={product.isOrganic}
-                    discount={product.discountValue > 0 ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100) : 0}
-                  />
-                ))}
+                {filteredProducts.map((product) => {
+                  const img =
+                    product.imageUrl && product.imageUrl.trim().length > 0
+                      ? product.imageUrl
+                      : noImage; // ✅ 없으면 no-images.png
+
+                  return (
+                    <ProductCard
+                      key={product.productId}
+                      id={String(product.productId)}
+                      name={product.name}
+                      price={product.price}
+                      originalPrice={product.price + product.discountValue}
+                      image={img}                               // ✅ 변경
+                      rating={product.rating}
+                      reviewCount={product.reviewCount}
+                      farm={product.farmName ?? "농장 정보 없음"}
+                      isOrganic={product.isOrganic}
+                      discount={
+                        product.discountValue > 0
+                          ? Math.round(
+                              (product.discountValue / (product.price + product.discountValue)) *
+                                100
+                            )
+                          : undefined
+                      }
+                    />
+                  );
+                })}
+
               </div>
             ) : (
               <div className="text-center py-16">
