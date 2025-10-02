@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
-export type StatusType = "pending" | "approved" | "rejected" | "processing" | "completed" | "cancelled" | "in_progress"
+export type StatusType = "PENDING" | "APPROVED" | "REJECTED"
 
 interface StatusBadgeProps {
   status: StatusType
@@ -9,12 +9,9 @@ interface StatusBadgeProps {
 }
 
 const statusConfig = {
-  pending: { label: "대기중", className: "bg-status-pending text-warning-foreground" },
-  approved: { label: "승인됨", className: "bg-status-approved text-success-foreground" },
-  rejected: { label: "거절됨", className: "bg-status-rejected text-destructive-foreground" },
-  processing: { label: "처리중", className: "bg-status-processing text-accent-foreground" },
-  completed: { label: "완료", className: "bg-status-approved text-success-foreground" },
-  cancelled: { label: "취소됨", className: "bg-muted text-muted-foreground" }
+  PENDING: { label: "대기중", className: "bg-status-pending text-warning-foreground" },
+  APPROVED: { label: "승인됨", className: "bg-status-approved text-success-foreground" },
+  REJECTED: { label: "거절됨", className: "bg-status-rejected text-destructive-foreground" },
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {

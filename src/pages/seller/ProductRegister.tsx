@@ -101,20 +101,16 @@ export default function ProductRegister() {
     if (imageFiles.length > 0) {
         const formData = new FormData();
         imageFiles.forEach((file) => {
-            // 백엔드 @RequestPart("files")에 맞추어 필드명을 'files'로 사용
             formData.append('files', file); 
         });
         
         try {
             const imageApiUrl = `/api/products/${productId}/images`;
-            
             await axios.post(imageApiUrl, formData, {
-                // Axios가 FormData 처리 시 자동으로 Content-Type: multipart/form-data 설정
             });
 
         } catch (error) {
             console.error("이미지 파일 전송 Axios 에러:", error.response?.data || error.message);
-            // 파일 업로드 실패 시 경고
             toast({
                 title: "경고: 이미지 처리 실패",
                 description: "상품 정보는 등록되었으나, 이미지 파일 전송에 실패했습니다.",
