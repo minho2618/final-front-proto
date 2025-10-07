@@ -5,7 +5,7 @@ import { getAllProducts } from "@/lib/api";
 import tomatoesImage from "@/assets/tomatoes.jpg"; // Placeholder
 import { useNavigate } from 'react-router-dom';
 import { Product } from '@/api/axios';
-
+import noImage from "@/assets/no-image.png"; 
 // Define the Product type based on the API response
 
 
@@ -42,6 +42,20 @@ const FeaturedProducts = () => {
     fetchProducts();
   }, []);
 
+  // ✅ 제품 객체에서 안전하게 대표 이미지 고르기
+  const pickImage = (p: any): string => {
+    const candidates = [
+      p?.imageUrl,
+      p?.image,
+      p?.thumbnailUrl,
+      Array.isArray(p?.images) ? p.images[0]?.url : undefined,
+    ];
+    const found = candidates.find(
+      (u) => typeof u === "string" && u.trim().length > 0
+    );
+    return found ?? noImage;
+  };
+  
   if (loading) {
     return (
       <section className="py-16">
@@ -86,14 +100,17 @@ const FeaturedProducts = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {products.map((product: any) => {
+            const img = pickImage(product);
+
+            return(
             <ProductCard
               key={product.productId}
               id={String(product.productId)}
               name={product.name}
               price={product.price}
               originalPrice={product.price + product.discountValue}
-              image={tomatoesImage} // Using placeholder
+              image={img} // 
               rating={4.5} // Placeholder
               reviewCount={0} // Placeholder
               //farm={product.seller.sellerName}
@@ -105,7 +122,8 @@ const FeaturedProducts = () => {
                   : undefined
               }
             />
-          ))}
+          );
+          })}
         </div>
 
         {/* Mobile View More Button */}

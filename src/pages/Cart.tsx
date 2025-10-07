@@ -18,6 +18,8 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import noImage from "@/assets/no-image.png";
+
 
 const Cart = () => {
   const { state, removeItem, updateQuantity, checkout } = useCart();
@@ -107,10 +109,16 @@ const Cart = () => {
                   <div key={item.id} className="p-6">
                     <div className="flex space-x-4">
                       <Link to={`/product/${item.id}`} className="flex-shrink-0">
-                        <img 
-                          src={item.image} 
+                        <img
+                          src={(item.image && item.image.trim().length > 0) ? item.image : noImage}
                           alt={item.name}
                           className="w-20 h-20 object-cover rounded-lg"
+                          onError={(e) => {
+                            // 무한 루프 방지: 이미 noImage면 다시 설정하지 않기
+                            if (e.currentTarget.src !== window.location.origin + noImage) {
+                              e.currentTarget.src = noImage;
+                            }
+                          }}
                         />
                       </Link>
                       
@@ -256,9 +264,12 @@ const Cart = () => {
               
               <div className="mt-6 space-y-3">
                 <Button 
-                  className="w-full bg-gradient-fresh shadow-fresh h-12"
+                  size="lg"
+                  className="w-full h-12 text-white hover:brightness-95
+                            [background-image:linear-gradient(135deg,#22c55e_0%,#16a34a_100%)] shadow-fresh"
                   onClick={handleCheckout}
-                  disabled={loading}
+                  disabled={loading} // 로딩 중일 때만 비활성
+
                 >
                   {loading ? "주문 처리 중..." : <><CreditCard className="w-5 h-5 mr-2" />{total.toLocaleString()}원 결제하기</>}
                 </Button>
