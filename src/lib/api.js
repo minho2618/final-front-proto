@@ -133,3 +133,18 @@ export const getAllOrders = async (page = 0, size = 20) => {
         throw error;
     }
 };
+
+// Review APIs
+export const getAllReviewsByProduct = async (productId) => {
+  try {
+    const res = await apiClient.get(`/reviews/${productId}/reviews`, { 
+      params: {
+        productId
+      }
+    })
+    return res.data;
+  } catch (error) {
+    console.error(`Error fetching all Review with ${productId}: ${error}`, error, productId)
+    throw error
+  }
+}

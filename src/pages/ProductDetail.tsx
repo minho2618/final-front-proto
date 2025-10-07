@@ -20,7 +20,7 @@ import {
   Shield
 } from "lucide-react";
 import Header from "@/components/Header";
-import { getProductById } from "@/lib/api";
+import { getProductById, getAllReviewsByProduct } from "@/lib/api";
 
 import tomatoesImage from "@/assets/tomatoes.jpg"; // Placeholder
 
@@ -46,6 +46,7 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState(null);
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -63,6 +64,8 @@ const ProductDetail = () => {
         const productId = parseInt(id, 10);
         const data = await getProductById(productId);
         setProduct(data);
+        const reviews = await getAllReviewsByProduct(productId);
+        setReviews(reviews);
       } catch (err) {
         setError("상품 정보를 불러오는 데 실패했습니다.");
         console.error(err);
@@ -91,26 +94,6 @@ const ProductDetail = () => {
     });
   };
 
-  // Mock reviews until API is ready
-  const reviews = [
-    {
-      id: 1,
-      user: "김**",
-      rating: 5,
-      date: "2024.03.15",
-      content: "정말 달고 맛있어요! 토마토 특유의 신맛도 적당하고 아이들도 잘 먹네요.",
-      helpful: 12
-    },
-    {
-      id: 2,
-      user: "이**",
-      rating: 4,
-      date: "2024.03.12",
-      content: "포장도 깔끔하고 배송도 빨랐습니다. 크기가 생각보다 큰 편이에요.",
-      helpful: 8
-    }
-  ];
-
   if (loading) {
     return <div className="min-h-screen bg-background flex items-center justify-center"><p>상품 정보를 불러오는 중...</p></div>;
   }
@@ -120,7 +103,7 @@ const ProductDetail = () => {
   }
 
   const productImages = product.images?.length ? product.images.map(img => img.url) : [tomatoesImage, tomatoesImage, tomatoesImage];
-  const rating = product.rating || 4.5; // Placeholder
+  const rating = /*product.rating*/ reviews.length === 0 ? 0 : reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length || 4.5; // Placeholder
   const reviewCount = product.reviewCount || reviews.length; // Placeholder
   const discount = product.discountValue > 0 ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100) : 0;
 
@@ -325,7 +308,7 @@ const ProductDetail = () => {
                 <Card key={review.id} className="p-6">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center space-x-3">
-                      <span className="font-medium">{review.user}</span>
+                      <span className="font-medium">{review.memberName}</span>
                       <div className="flex items-center space-x-1">
                         {[...Array(5)].map((_, i) => (
                           <Star 
@@ -339,12 +322,9 @@ const ProductDetail = () => {
                         ))}
                       </div>
                     </div>
-                    <span className="text-sm text-muted-foreground">{review.date}</span>
+                    <span className="text-sm text-muted-foreground">{review.createdAt}</span>
                   </div>
                   <p className="text-muted-foreground mb-3">{review.content}</p>
-                  <Button variant="ghost" size="sm" className="text-muted-foreground">
-                    도움됨 {review.helpful}
-                  </Button>
                 </Card>
               ))}
             </TabsContent>
