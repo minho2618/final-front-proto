@@ -68,7 +68,7 @@ const CategoryPage = () => {
             isOrganic: Math.random() > 0.5, 
             rating: (Math.random() * (5 - 3.5) + 3.5), 
             reviewCount: Math.floor(Math.random() * 200),
-            imageUrl: p.imageUrl || "/assets/grain-Dr2KU0m4.jpg",
+            imageUrl: (p.imageUrl && p.imageUrl.trim()) ? p.imageUrl : noImage,
         }));
         setProducts(productsWithMockData);
       } catch (err) {
