@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
   base: '/',
   server: {
     host: "::",
-    port: 8080,
+    port: 80,
     proxy: {
       "/api": {
         target: "http://34.64.208.180:9000",

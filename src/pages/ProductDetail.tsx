@@ -20,12 +20,8 @@ import {
   Shield
 } from "lucide-react";
 import Header from "@/components/Header";
-<<<<<<< HEAD
-import { getProductById, getAllReviewsByProduct } from "@/lib/api";
-=======
 import { getProductById } from "@/lib/api";
 import noImage from "@/assets/no-image.png";
->>>>>>> a5cef0231318639b3550a2962701253a70409297
 
 
 // Based on ProductRes
@@ -108,14 +104,9 @@ const ProductDetail = () => {
     return <div className="min-h-screen bg-background flex items-center justify-center"><p className="text-red-500">{error || "상품을 찾을 수 없습니다."}</p></div>;
   }
 
-<<<<<<< HEAD
-  const productImages = product.images?.length ? product.images.map(img => img.url) : [tomatoesImage, tomatoesImage, tomatoesImage];
-  const rating = /*product.rating*/ reviews.length === 0 ? 0 : reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length || 4.5; // Placeholder
-=======
   const rawImages = (product.images?.map(i => i.url).filter(u => u && u.trim()) ?? []);
   const productImages = rawImages.length > 0 ? rawImages : [noImage];
   const rating = product.rating || 4.5; // Placeholder
->>>>>>> a5cef0231318639b3550a2962701253a70409297
   const reviewCount = product.reviewCount || reviews.length; // Placeholder
   const discount = product.discountValue > 0 ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100) : 0;
 
