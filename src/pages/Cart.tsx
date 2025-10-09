@@ -15,6 +15,8 @@ import Header from "@/components/Header";
 // ⭐️ useCart 훅에서 필요한 모든 함수를 가져옵니다.
 import { useCart } from "@/contexts/CartContext"; 
 import { useToast } from "@/hooks/use-toast";
+import noImage from "@/assets/no-image.png";
+
 
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'; 
 

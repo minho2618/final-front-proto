@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Clock, Gavel, TrendingUp, Users, Eye, Heart } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import noImage from "@/assets/no-image.png";
+
 
 interface AuctionItem {
   id: string;
@@ -172,11 +174,20 @@ const AuctionPage = () => {
                 >
                   <CardHeader className="p-0">
                     <div className="relative h-48 overflow-hidden rounded-t-lg">
-                      <img 
-                        src={item.image} 
+                      <img
+                        src={item.image && item.image.trim().length > 0 ? item.image : noImage}
                         alt={item.title}
                         className="w-full h-full object-cover"
+                        loading="lazy"
+                        onError={(e) => {
+                          // 무한 루프 방지: 이미 noImage면 다시 설정하지 않기
+                          const fallback = new URL(noImage, window.location.origin).href;
+                          if (e.currentTarget.src !== fallback) {
+                            e.currentTarget.src = fallback;
+                          }
+                        }}
                       />
+
                       <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
                         {item.category}
                       </Badge>

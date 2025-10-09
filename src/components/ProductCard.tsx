@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import noImage from "@/assets/no-image.png";
+
 
 interface ProductCardProps {
   productId: number; // ⭐️ string -> number로 수정
@@ -84,9 +86,17 @@ const ProductCard = ({
         {/* 상품 이미지 */}
         <div className="relative overflow-hidden rounded-t-lg">
           <img
-            src={image}
+            src={image && image.trim().length > 0 ? image : noImage}
             alt={name}
-            className="w-full h-48 object-cover smooth-transition group-hover:scale-105"
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => {
+              // 무한 루프 방지: 이미 fallback이면 다시 세팅하지 않기
+              const fallback = new URL(noImage, window.location.origin).href;
+              if (e.currentTarget.src !== fallback) {
+                e.currentTarget.src = fallback;
+              }
+            }}
           />
 
           {/* 할인 배지 */}
