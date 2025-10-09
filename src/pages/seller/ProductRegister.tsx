@@ -62,79 +62,77 @@ export default function ProductRegister() {
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
-  const onSubmit = async (data: ProductFormData) => {
-    const token = localStorage.getItem('Authorization'); // 실제 토큰 저장소에 맞게 수정 필요
+const onSubmit = async (data: ProductFormData) => {
+  const token = localStorage.getItem("Authorization");
+  if (!token) {
+    toast({ title: "인증 오류", description: "로그인 토큰이 없어 상품 등록을 진행할 수 없습니다.", variant: "destructive" });
+    return;
+  }
 
-    if (!token) {
-        toast({ title: "인증 오류", description: "로그인 토큰이 없어 상품 등록을 진행할 수 없습니다.", variant: "destructive" });
-        return;
-    }
+  // 1) 상품 생성
+  const productReqData = {
+    name: data.name,
+    description: data.description,
+    price: Number(data.price),
+    category: data.category,
+    discountValue: 0,
+    isActive: true,
+  };
 
-    // 1. 상품 정보 (JSON) 전송 ----------------------------------------
-    const productReqData = {
-        name: data.name,
-        description: data.description,
-        price: Number(data.price), 
-        category: data.category, 
-        discountValue: 0,
-        isActive: true,
-    };
-    
-    let productId;
-    try {
-        // ... /api/products JSON POST 요청 (변경 없음)
-        const response = await axios.post('/api/products', productReqData, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `${token}`
-              }
-        });
-        productId = response.data.productId; 
-
-    } catch (error) {
-        console.error("상품 정보 등록 Axios 에러:", error.response?.data || error.message);
-        toast({ title: "상품 등록 실패", description: "상품 정보 전송에 실패했습니다.", variant: "destructive" });
-        return; 
-    }
-
-    // 2. 이미지 파일 등록 (파일을 상품 이미지 API로 직접 전송) -----------
-    if (imageFiles.length > 0) {
-        const formData = new FormData();
-        imageFiles.forEach((file) => {
-            formData.append('files', file); 
-        });
-        
-        try {
-            // const imageApiUrl = `/api/products/${productId}/images`;
-            // await axios.post(imageApiUrl, formData, {
-            // });
-            const imageApiUrl = `/api/products/images/upload`;
-            await axios.post(imageApiUrl, formData, {
-              params : {
-                'groupId' : productId
-              }
-            });
-        } catch (error) {
-            console.error("이미지 파일 전송 Axios 에러:", error.response?.data || error.message);
-            toast({
-                title: "경고: 이미지 처리 실패",
-                description: "상품 정보는 등록되었으나, 이미지 파일 전송에 실패했습니다.",
-            });
-        }
-    }
-
-    // 최종 성공 처리 --------------------------------------------------
-    toast({
-        title: "상품 등록 완료 🎉",
-        description: `${productReqData.name} 상품 등록이 완료되었습니다.`,
-        variant: "default",
+  let productId: number;
+  try {
+    const response = await axios.post("/api/products", productReqData, {
+      headers: { Authorization: token }, // ← 여기만 필요
     });
+    productId = response.data.productId;
+  } catch (error: any) {
+    console.error("상품 정보 등록 Axios 에러:", error?.response?.data || error?.message);
+    toast({ title: "상품 등록 실패", description: "상품 정보 전송에 실패했습니다.", variant: "destructive" });
+    return;
+  }
 
-    // 폼 초기화
-    form.reset();
-    setImageFiles([]);
-    setImagePreviews([]);
+  // 2) 이미지 업로드
+  if (imageFiles.length > 0) {
+    const formData = new FormData();
+
+    // ★ 서버가 기대하는 필드명으로 맞추세요: 'files' / 'file' / 'images'
+    imageFiles.forEach((file) => formData.append("files", file));
+
+    // ★ groupId(=productId)를 서버가 @RequestParam("groupId")로 받는다면:
+    formData.append("groupId", String(productId));
+
+    try {
+      // (A) 현재 쓰는 엔드포인트를 유지하는 경우
+      await axios.post("/api/products/images/upload", formData, {
+        headers: { Authorization: token }, // ← multipart는 직접 지정하지 말기
+        // params: { groupId: productId }, // ← 필요하면 유지 가능하지만 FormData로 넣는 게 안전
+      });
+
+      // (B) REST 형태라면 이렇게도 가능:
+      // await axios.post(`/api/products/${productId}/images`, formData, {
+      //   headers: { Authorization: token },
+      // });
+
+    } catch (error: any) {
+      console.error("이미지 파일 전송 Axios 에러:", error?.response?.data || error?.message);
+      toast({
+        title: "경고: 이미지 처리 실패",
+        description: "상품 정보는 등록되었으나, 이미지 파일 전송에 실패했습니다.",
+      });
+      // 실패 시 롤백이 필요하면 여기서 상품 삭제 API 호출 고려
+    }
+  }
+
+  // 3) 성공 처리
+  toast({
+    title: "상품 등록 완료 🎉",
+    description: `${productReqData.name} 상품 등록이 완료되었습니다.`,
+  });
+  form.reset();
+  setImageFiles([]);
+  setImagePreviews([]);
 };
+
 
   return (
     <div className="space-y-6">

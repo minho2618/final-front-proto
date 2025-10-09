@@ -14,31 +14,31 @@ interface Category {
 
 const categories: Category[] = [
   {
-    id: "vegetables",
+    id: "VEGETABLE",
     name: "채소",
     image: leafyGreensImage,
     color: "from-green-400 to-green-600"
   },
   {
-    id: "fruits",
+    id: "FRUIT",
     name: "과일", 
     image: fruitsImage,
     color: "from-orange-400 to-red-500"
   },
   {
-    id: "grains",
+    id: "GRAIN",
     name: "곡물",
     image: grainImage,
     color: "from-yellow-400 to-orange-500"
   },
   {
-    id: "special",
+    id: "SEAFOOD",
     name: "수산물",
     image: fruitsImage, // 임시로 같은 이미지 사용  
     color: "from-purple-400 to-purple-600"
   },
   {
-    id: "herbs",
+    id: "ETC",
     name: "기타",
     image: leafyGreensImage, // 임시로 같은 이미지 사용
     color: "from-emerald-400 to-emerald-600"
