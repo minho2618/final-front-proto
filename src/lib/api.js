@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:9000/api',
+  // baseURL: 'http://localhost:9000/api',
+  baseURL: 'http://34.64.208.180:9000/api',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': localStorage.getItem('Authorization')
@@ -133,3 +134,18 @@ export const getAllOrders = async (page = 0, size = 20) => {
         throw error;
     }
 };
+
+// Review APIs
+export const getAllReviewsByProduct = async (productId) => {
+  try {
+    const res = await apiClient.get(`/reviews/${productId}/reviews`, { 
+      params: {
+        productId
+      }
+    })
+    return res.data;
+  } catch (error) {
+    console.error(`Error fetching all Review with ${productId}: ${error}`, error, productId)
+    throw error
+  }
+}

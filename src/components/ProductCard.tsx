@@ -10,7 +10,7 @@ import noImage from "@/assets/no-image.png";
 
 // ✅ imageId를 선택적으로 받으면 /stream/{imageId} 사용, 없으면 /proxy?src= 사용
 interface ProductCardProps {
-  id: string;
+  productId: number; // ⭐️ string -> number로 수정
   name: string;
   price: number;
   originalPrice?: number;
@@ -39,7 +39,7 @@ function toServerImageSrc(opts: { imageId?: number | string; raw?: string }) {
 }
 
 const ProductCard = ({
-  id,
+  productId,
   name,
   price,
   originalPrice,
@@ -71,23 +71,36 @@ const ProductCard = ({
   };
 
   const handleProductClick = () => {
-    navigate(`/product/${id}`);
+    navigate(`/product/${productId}`);
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  // ⭐️ 비동기 함수로 수정하고 await 처리
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    addItem({
-      id,
-      name,
-      price,
-      originalPrice,
-      image: imgSrc || image, // 장바구니 썸네일용
-      farm,
-    });
-    toast({
-      title: "장바구니에 추가되었습니다",
-      description: `${name}이(가) 장바구니에 담겼습니다.`,
-    });
+
+    try {
+      await addItem({
+        productId, // number 타입 ID
+        name,
+        price,
+        originalPrice,
+        image,
+        farm,
+      });
+      
+      // 성공 시 토스트 메시지
+      toast({
+        title: "장바구니에 추가되었습니다",
+        description: `${name}이(가) 장바구니에 담겼습니다.`,
+      });
+    } catch (error) {
+      // 실패 시 에러 토스트 메시지
+      toast({
+        title: "장바구니 추가 실패",
+        description: "서버 오류로 상품을 장바구니에 담지 못했습니다. 로그인 상태를 확인해주세요.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

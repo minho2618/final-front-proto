@@ -22,7 +22,7 @@ import { signUp, createSeller } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 
-const BACKEND_URL = 'http://localhost:9000'; 
+const BACKEND_URL = 'http://34.64.208.180'; 
 const NAVER_LOGIN_URL = `${BACKEND_URL}/oauth2/authorization/naver`;
 const GOOGLE_LOGIN_URL = `${BACKEND_URL}/oauth2/authorization/google`;
 
@@ -86,7 +86,7 @@ const Login = () => {
 
     axios({
       method:'post',
-      url:'http://localhost:9000/login',
+      url:'http://34.64.208.180/login',
       data:formData,
     })
     .then((res) => {
@@ -175,7 +175,7 @@ const Login = () => {
 
     axios({
   method: "post",
-  url: `http://localhost:9000/api/${signupData.type === "seller" ? "sellers" : "members"}`,
+  url: `http://34.64.208.180:9000/api/${signupData.type === "seller" ? "sellers" : "members"}`,
   data: payload,
 })
 .then(() => {
