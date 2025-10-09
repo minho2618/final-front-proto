@@ -149,3 +149,18 @@ export const getAllReviewsByProduct = async (productId) => {
     throw error
   }
 }
+
+// Product Image API
+export const getProductImage = async (productId) => {
+  try {
+    const res = await apiClient.get(`/products/images/${productId}`, { 
+      params: {
+        productId
+      }
+    })
+    return res.data;
+  } catch (error) {
+    console.error(`Error fetching Product Image with ${productId}: ${error}`, error, productId)
+    throw error
+  }
+}

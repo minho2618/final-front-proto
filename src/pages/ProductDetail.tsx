@@ -20,7 +20,7 @@ import {
   Shield
 } from "lucide-react";
 import Header from "@/components/Header";
-import { getProductById, getAllReviewsByProduct } from "@/lib/api";
+import { getProductById, getAllReviewsByProduct, getProductImage } from "@/lib/api";
 import noImage from "@/assets/no-image.png";
 
 
@@ -50,6 +50,7 @@ const ProductDetail = () => {
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [productImage, setProductImage] = useState(null); // Product Image;
   const { addItem } = useCart();
   const { toast } = useToast();
 
@@ -66,6 +67,8 @@ const ProductDetail = () => {
         setProduct(data);
         const reviews = await getAllReviewsByProduct(productId);
         setReviews(reviews);
+        const productImage = await getProductImage(productId);
+        setProductImage(productImage);
       } catch (err) {
         setError("상품 정보를 불러오는 데 실패했습니다.");
         console.error(err);
@@ -104,8 +107,8 @@ const ProductDetail = () => {
     return <div className="min-h-screen bg-background flex items-center justify-center"><p className="text-red-500">{error || "상품을 찾을 수 없습니다."}</p></div>;
   }
 
-  const rawImages = (product.images?.map(i => i.url).filter(u => u && u.trim()) ?? []);
-  const productImages = rawImages.length > 0 ? rawImages : [noImage];
+  // const rawImages = (product.images?.map(i => i.url).filter(u => u && u.trim()) ?? []);
+  const productImages = productImage.length > 0 ? productImage : [noImage];
   const rating = product.rating || 4.5; // Placeholder
   const reviewCount = product.reviewCount || reviews.length; // Placeholder
   const discount = product.discountValue > 0 ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100) : 0;
@@ -129,7 +132,7 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="aspect-square bg-secondary rounded-xl overflow-hidden">
                 <img
-                  src={productImages[selectedImage]}
+                  src={productImages[selectedImage].url}
                   alt={product.name}
                   className="w-full h-full object-cover"
                   loading="lazy"
@@ -150,7 +153,7 @@ const ProductDetail = () => {
                   }`}
                 >
                   <img 
-                          src={image || noImage}
+                          src={image.url || noImage}
                           alt={`${product.name} ${index + 1}`}
                           className="w-full h-full object-cover"
                           loading="lazy"
