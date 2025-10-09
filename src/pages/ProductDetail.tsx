@@ -20,9 +20,13 @@ import {
   Shield
 } from "lucide-react";
 import Header from "@/components/Header";
+<<<<<<< HEAD
 import { getProductById, getAllReviewsByProduct } from "@/lib/api";
+=======
+import { getProductById } from "@/lib/api";
+import noImage from "@/assets/no-image.png";
+>>>>>>> a5cef0231318639b3550a2962701253a70409297
 
-import tomatoesImage from "@/assets/tomatoes.jpg"; // Placeholder
 
 // Based on ProductRes
 interface Product {
@@ -78,21 +82,23 @@ const ProductDetail = () => {
   }, [id]);
 
   const handleAddToCart = () => {
-    if (!product) return;
-    for (let i = 0; i < quantity; i++) {
-      addItem({
-        id: String(product.productId),
-        name: product.name,
-        price: product.price,
-        image: tomatoesImage, // Placeholder
-        farm: product.seller.sellerName
-      });
-    }
-    toast({
-      title: "장바구니에 추가되었습니다",
-      description: `${product.name} ${quantity}개가 장바구니에 담겼습니다.`,
+  if (!product) return;
+  const imageForCart = rawImages[0] ?? noImage; // ✅ 첫 이미지 없으면 noImage
+
+  for (let i = 0; i < quantity; i++) {
+    addItem({
+      id: String(product.productId),
+      name: product.name,
+      price: product.price,
+      image: imageForCart,        // ✅ 변경: tomatoesImage → imageForCart
+      farm: product.seller.sellerName,
     });
-  };
+  }
+  toast({
+    title: "장바구니에 추가되었습니다",
+    description: `${product.name} ${quantity}개가 장바구니에 담겼습니다.`,
+  });
+};
 
   if (loading) {
     return <div className="min-h-screen bg-background flex items-center justify-center"><p>상품 정보를 불러오는 중...</p></div>;
@@ -102,8 +108,14 @@ const ProductDetail = () => {
     return <div className="min-h-screen bg-background flex items-center justify-center"><p className="text-red-500">{error || "상품을 찾을 수 없습니다."}</p></div>;
   }
 
+<<<<<<< HEAD
   const productImages = product.images?.length ? product.images.map(img => img.url) : [tomatoesImage, tomatoesImage, tomatoesImage];
   const rating = /*product.rating*/ reviews.length === 0 ? 0 : reviews.reduce((sum, item) => sum + item.rating, 0) / reviews.length || 4.5; // Placeholder
+=======
+  const rawImages = (product.images?.map(i => i.url).filter(u => u && u.trim()) ?? []);
+  const productImages = rawImages.length > 0 ? rawImages : [noImage];
+  const rating = product.rating || 4.5; // Placeholder
+>>>>>>> a5cef0231318639b3550a2962701253a70409297
   const reviewCount = product.reviewCount || reviews.length; // Placeholder
   const discount = product.discountValue > 0 ? Math.round((product.discountValue / (product.price + product.discountValue)) * 100) : 0;
 
@@ -125,11 +137,17 @@ const ProductDetail = () => {
           {/* Product Images */}
           <div className="space-y-4">
             <div className="aspect-square bg-secondary rounded-xl overflow-hidden">
-              <img 
-                src={productImages[selectedImage]} 
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+                <img
+                  src={productImages[selectedImage]}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    const fallback = new URL(noImage, window.location.origin).href;
+                    if (e.currentTarget.src !== fallback) e.currentTarget.src = fallback;
+                  }}
+                />
+
             </div>
             <div className="flex space-x-2">
               {productImages.map((image, index) => (
@@ -141,10 +159,16 @@ const ProductDetail = () => {
                   }`}
                 >
                   <img 
-                    src={image} 
-                    alt={`${product.name} ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+                          src={image || noImage}
+                          alt={`${product.name} ${index + 1}`}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            const fallback = new URL(noImage, window.location.origin).href;
+                            if (e.currentTarget.src !== fallback) e.currentTarget.src = fallback;
+                          }}
+                        />
+
                 </button>
               ))}
             </div>
@@ -240,7 +264,9 @@ const ProductDetail = () => {
 
               <div className="flex space-x-3">
                 <Button 
-                  className="flex-1 bg-gradient-fresh hover:shadow-fresh h-12"
+                  size="lg"
+                  className="w-full h-12 text-white hover:brightness-95
+                            [background-image:linear-gradient(135deg,#22c55e_0%,#16a34a_100%)] shadow-fresh"
                   onClick={handleAddToCart}
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />

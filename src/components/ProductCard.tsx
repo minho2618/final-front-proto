@@ -6,9 +6,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import noImage from "@/assets/no-image.png";
+
 
 interface ProductCardProps {
-  id: string;
+  productId: number; // ⭐️ string -> number로 수정
   name: string;
   price: number;
   originalPrice?: number;
@@ -21,7 +23,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({
-  id,
+  productId,
   name,
   price,
   originalPrice,
@@ -39,23 +41,36 @@ const ProductCard = ({
   const { toast } = useToast();
 
   const handleProductClick = () => {
-    navigate(`/product/${id}`);
+    navigate(`/product/${productId}`);
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  // ⭐️ 비동기 함수로 수정하고 await 처리
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    addItem({
-      id,
-      name,
-      price,
-      originalPrice,
-      image,
-      farm,
-    });
-    toast({
-      title: "장바구니에 추가되었습니다",
-      description: `${name}이(가) 장바구니에 담겼습니다.`,
-    });
+
+    try {
+      await addItem({
+        productId, // number 타입 ID
+        name,
+        price,
+        originalPrice,
+        image,
+        farm,
+      });
+      
+      // 성공 시 토스트 메시지
+      toast({
+        title: "장바구니에 추가되었습니다",
+        description: `${name}이(가) 장바구니에 담겼습니다.`,
+      });
+    } catch (error) {
+      // 실패 시 에러 토스트 메시지
+      toast({
+        title: "장바구니 추가 실패",
+        description: "서버 오류로 상품을 장바구니에 담지 못했습니다. 로그인 상태를 확인해주세요.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -71,9 +86,17 @@ const ProductCard = ({
         {/* 상품 이미지 */}
         <div className="relative overflow-hidden rounded-t-lg">
           <img
-            src={image}
+            src={image && image.trim().length > 0 ? image : noImage}
             alt={name}
-            className="w-full h-48 object-cover smooth-transition group-hover:scale-105"
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => {
+              // 무한 루프 방지: 이미 fallback이면 다시 세팅하지 않기
+              const fallback = new URL(noImage, window.location.origin).href;
+              if (e.currentTarget.src !== fallback) {
+                e.currentTarget.src = fallback;
+              }
+            }}
           />
 
           {/* 할인 배지 */}
