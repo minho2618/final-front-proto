@@ -100,13 +100,13 @@ const FeaturedProducts = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product: any) => {
+          {products.map((product) => {
             const img = pickImage(product);
 
             return(
             <ProductCard
               key={product.productId}
-              id={String(product.productId)}
+              productId={product.productId}
               name={product.name}
               price={product.price}
               originalPrice={product.price + product.discountValue}

@@ -175,7 +175,7 @@ const Login = () => {
 
     axios({
   method: "post",
-  url: `http://34.64.208.180:9000/api/${signupData.type === "seller" ? "sellers" : "members"}`,
+  url: `http://34.64.208.180/api/${signupData.type === "seller" ? "sellers" : "members"}`,
   data: payload,
 })
 .then(() => {

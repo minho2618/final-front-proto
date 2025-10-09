@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
     port: 80,
     proxy: {
       "/api": {
-        target: "http://34.64.208.180:9000",
+        target: "http://34.64.208.180",
         changeOrigin: true,
         secure: false,
       },

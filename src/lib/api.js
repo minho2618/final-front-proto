@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const apiClient = axios.create({
   // baseURL: 'http://localhost:9000/api',
-  baseURL: 'http://34.64.208.180:9000/api',
+  baseURL: 'http://34.64.208.180/api',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': localStorage.getItem('Authorization')

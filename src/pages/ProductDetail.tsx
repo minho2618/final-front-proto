@@ -20,7 +20,7 @@ import {
   Shield
 } from "lucide-react";
 import Header from "@/components/Header";
-import { getProductById } from "@/lib/api";
+import { getProductById, getAllReviewsByProduct } from "@/lib/api";
 import noImage from "@/assets/no-image.png";
 
 
@@ -83,7 +83,7 @@ const ProductDetail = () => {
 
   for (let i = 0; i < quantity; i++) {
     addItem({
-      id: String(product.productId),
+      productId: product.productId,
       name: product.name,
       price: product.price,
       image: imageForCart,        // ✅ 변경: tomatoesImage → imageForCart
